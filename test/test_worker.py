@@ -16,7 +16,7 @@ Scenario:
     - 'evaluate()' method should rise "CorruptedRPNExpressionError" custom exception when there are too many operators in RPN expression
     - 'evaluate()' method should rise "CorruptedRPNExpressionError" custom exception if list is not empty after evaluation
     - 'evaluate()' method should rise "CorruptedRPNExpressionError" custom exception if expression is empty
-    - 'evaluate()' method should rise "ValueError" when expression has other strings than defined in 'ops' dictionary
+    - 'evaluate()' method should rise "ValueError" when expression has strings or other chars than defined in 'ops' dictionary
 """
 
 
@@ -104,3 +104,9 @@ def test_for_empty_input(worker_instance):
     empty_input = " "
     with pytest.raises(worker_instance.CorruptedRPNExpressionError):
         worker_instance.evaluate(empty_input)
+
+
+def test_disallowed_chars_in_expression(worker_instance):
+    corrupted_expression = "abc 4 +"
+    with pytest.raises(worker_instance.CorruptedRPNExpressionError):
+        worker_instance.evaluate(corrupted_expression)
