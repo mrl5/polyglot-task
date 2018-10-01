@@ -27,6 +27,13 @@ class Worker:
                 stack.append(int(token))
         return stack.pop()
 
+    class CorruptedRPNExpressionError(Exception):
+        """
+        Custom exception when Reverse Polish Notation expression has non-valid syntax
+        """
+        def __init__(self):
+            self.strerror = "Expression has non-valid RPN syntax"
+
 
 def main():
     allowed_args = 2 if sys.argv[0] == __file__ else 1
