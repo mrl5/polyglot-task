@@ -12,8 +12,11 @@ puts "If you change your mind, hit Ctrl+C to end this app"
 puts ""
 puts "Your input:"
 
+# save input and (.chomp) remove carriage return from end of the input string
 inp = gets.chomp
+# convert input to integer, if inp is a string result will be 0
 no_of_expressions = inp.to_i
+
 if no_of_expressions.is_a? Integer
 	if no_of_expressions > 0
 		puts "Hurray"
