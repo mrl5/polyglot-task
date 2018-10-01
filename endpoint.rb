@@ -17,9 +17,14 @@ inp = gets.chomp
 # convert input to integer, if inp is a string result will be 0
 no_of_expressions = inp.to_i
 
+def get_RPN_expressions(no_of_exp)
+	puts "Lets go!"
+end
+
+# main
 if no_of_expressions.is_a? Integer
 	if no_of_expressions > 0
-		puts "Hurray"
+		get_RPN_expressions(no_of_expressions)
 	else
 		raise("Number of RPN expressions must be greather than 0")
 	end
