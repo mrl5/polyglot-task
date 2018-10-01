@@ -1,8 +1,13 @@
 # README
 
 ## Table of contents
+* [Dependencies](#dependencies)
 * [Task](#task)
 * [My way](#my-way)
+
+## Dependencies
+- Python3.4 (or higher)
+    - `pytest` library (if you want to run tests)
 
 ## Task
 #### Input:
