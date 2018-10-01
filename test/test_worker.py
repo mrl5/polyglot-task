@@ -14,7 +14,7 @@ Scenario:
     - test if 'evaluate()' method is run when worker.py is executed in console `python worker.py`
     - worker.py accepts only one argument else raise "Exception" exception
     - 'evaluate()' method should rise "IndexError" exception when there are too many operators in RPN expression
-    - 'evaluate()' method should rise "CorruptedRPNExpression" custom exception if list is not empty after evaluation
+    - 'evaluate()' method should rise "CorruptedRPNExpressionError" custom exception if list is not empty after evaluation
     - 'evaluate()' method should rise "EmptyInput" custom exception if expression is empty
     - 'evaluate()' method should rise "ValueError" when expression has other strings than defined in 'ops' dictionary
 """
@@ -91,4 +91,10 @@ def test_shell_subprocess_with_no_args():
 def test_for_IndexError(worker_instance):
     corrupted_expression = "3 4 + -"
     with pytest.raises(IndexError):
+        worker_instance.evaluate(corrupted_expression)
+
+
+def test_for_CorruptedRPNExpressionError(worker_instance):
+    corrupted_expression = "2 3 4 +"
+    with pytest.raises(worker_instance.CorruptedRPNExpressionError):
         worker_instance.evaluate(corrupted_expression)
