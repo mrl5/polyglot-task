@@ -76,6 +76,13 @@ def test_shell_subprocess_with_too_many_args():
         subprocess.check_call(["python", tested_file, expression, "redundant expression"])
 
 
+def test_shell_subprocess_with_no_args():
+    test_file_location = os.path.dirname(os.path.realpath(__file__))
+    tested_file = os.path.join(os.path.dirname(test_file_location), "worker.py")
+    with pytest.raises(subprocess.CalledProcessError):
+        subprocess.check_call(["python", tested_file])
+
+
 def test_for_IndexError():
     corrupted_expression = "3 4 + -"
     with pytest.raises(IndexError):
