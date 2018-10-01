@@ -21,8 +21,8 @@ if no_of_expressions.is_a? Integer
 	if no_of_expressions > 0
 		puts "Hurray"
 	else
-		abort("Number of RPN expressions must be greather than 0. Aborting.")
+		raise("Number of RPN expressions must be greather than 0")
 	end
 else
-	abort("First line must be an integer. Aborting.")
+	raise("First line must be an integer")
 end
