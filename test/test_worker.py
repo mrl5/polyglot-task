@@ -52,3 +52,9 @@ def test_additional_whitespaces_in_expression(expected_results):
         result = {key: evaluate(key)}
         real_results.update(result)
     assert expected_results == real_results
+
+
+def test_for_IndexError():
+    corrupted_expression = "3 4 + -"
+    with pytest.raises(IndexError):
+        evaluate(corrupted_expression)
