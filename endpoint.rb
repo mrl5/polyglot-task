@@ -19,6 +19,12 @@ no_of_expressions = inp.to_i
 
 def get_RPN_expressions(no_of_exp)
 	puts "Lets go!"
+	expressions = Array.new
+	no_of_exp.times do
+		expression = gets.chomp
+		expressions.push(expression)
+	end
+	puts expressions
 end
 
 # main
