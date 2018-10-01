@@ -32,6 +32,8 @@ class Worker:
                 raise self.CorruptedRPNExpressionError
         except IndexError as ie:
             raise self.CorruptedRPNExpressionError from ie
+        except ValueError as ve:
+            raise self.CorruptedRPNExpressionError from ve
         return output
 
     class CorruptedRPNExpressionError(Exception):
