@@ -17,18 +17,21 @@ class Worker:
     def evaluate(self, expression):
         tokens = expression.split()
         stack = []
-        for token in tokens:
-            if token in self._ops:
-                number2 = stack.pop()
-                number1 = stack.pop()
-                result = self._ops[token](number1, number2)
-                stack.append(result)
-            else:
-                stack.append(int(token))
-        # stack should be empty at this point
-        output = stack.pop()
-        if stack:
-            raise self.CorruptedRPNExpressionError
+        try:
+            for token in tokens:
+                if token in self._ops:
+                    number2 = stack.pop()
+                    number1 = stack.pop()
+                    result = self._ops[token](number1, number2)
+                    stack.append(result)
+                else:
+                    stack.append(int(token))
+            output = stack.pop()
+            # stack should be empty at this point
+            if stack:
+                raise self.CorruptedRPNExpressionError
+        except IndexError as ie:
+            raise self.CorruptedRPNExpressionError from ie
         return output
 
     class CorruptedRPNExpressionError(Exception):
