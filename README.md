@@ -35,8 +35,5 @@ saved to a file.
 
 ## My way
 1. "Worker" = Python: computes RPN expressions, throws exceptions on bad input
-    - Exceptions:
-        - too many operators
-        - too many numbers
 2. "API" (requests, spawning worker processes, logging) = Go
 3. Endpoint interface: Ruby or Ruby on Rails (probably the second one)
