@@ -25,7 +25,11 @@ class Worker:
                 stack.append(result)
             else:
                 stack.append(int(token))
-        return stack.pop()
+        # stack should be empty at this point
+        output = stack.pop()
+        if stack:
+            raise self.CorruptedRPNExpressionError
+        return output
 
     class CorruptedRPNExpressionError(Exception):
         """
