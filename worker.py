@@ -28,3 +28,13 @@ def evaluate(expression):
         else:
             stack.append(int(token))
     return stack.pop()
+
+
+def main():
+    expression = sys.argv[1] if (sys.argv[0] == __file__) else sys.argv[0]
+    print(evaluate(expression))
+
+
+if __name__ == "__main__":
+    import sys
+    main()
