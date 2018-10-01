@@ -24,13 +24,13 @@ def get_RPN_expressions(no_of_exp)
 		expression = gets.chomp
 		expressions.push(expression)
 	end
-	puts expressions
+	return expressions
 end
 
 # main
 if no_of_expressions.is_a? Integer
 	if no_of_expressions > 0
-		get_RPN_expressions(no_of_expressions)
+		puts get_RPN_expressions(no_of_expressions)
 	else
 		raise("Number of RPN expressions must be greather than 0")
 	end
