@@ -31,9 +31,9 @@ def evaluate(expression):
 
 
 def main():
-    if sys.argv[0] == __file__:
-        if len(sys.argv) > 2:
-            raise Exception("Script accepts only one argument.")
+    allowed_args = 2 if sys.argv[0] == __file__ else 1
+    if len(sys.argv) != allowed_args:
+        raise Exception("Script accepts only one argument.")
 
     expression = sys.argv[1] if sys.argv[0] == __file__ else sys.argv[0]
     print(evaluate(expression))
