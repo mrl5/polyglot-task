@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import pytest
+import subprocess
+import os
 from worker import evaluate
 
 __author__ = "mrl5"
@@ -9,6 +11,7 @@ __author__ = "mrl5"
 Scenario:
     - 'evaluate()' function should return expected values
     - 'evaluate()' function should ignore extra whitespaces
+    - test if 'evaluate()' function is run when worker.py is executed in console `python worker.py`
     - 'evaluate()' function should rise "IndexError" exception when there are too many operators in RPN expression
     - 'evaluate()' function should rise "CorruptedRPNExpression" custom exception if list is not empty after evaluation
     - 'evaluate()' function should rise "EmptyInput" custom exception if expression is empty
@@ -52,6 +55,16 @@ def test_additional_whitespaces_in_expression(expected_results):
         result = {key: evaluate(key)}
         real_results.update(result)
     assert expected_results == real_results
+
+
+def test_shell_subprocess(expected_results):
+    test_file_location = os.path.dirname(os.path.realpath(__file__))
+    tested_file = os.path.join(os.path.dirname(test_file_location), "worker.py")
+    expression = "2 2 +"
+    result = evaluate(expression)
+    stdout_expected_result = str.encode(str(result) + "\n")
+    stdout = subprocess.check_output(["python", tested_file, expression])
+    assert stdout == stdout_expected_result
 
 
 def test_for_IndexError():
