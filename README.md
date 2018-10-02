@@ -77,14 +77,14 @@ saved to a file.
 3. Worker responsible for the process of calculation
 
 ## ToDo
-0. New `make.py` script
-    [ ] makes sure that the dependencies are met
-    [ ] compiles `api.go`
-1. endpoint.rb
-    [ ] generate unique hash on startup and pass it to the API
-2. api.go
-    [ ] take two args: endpoint hash and RPN expression
-    [ ] new input.log format: `date hash input execTime`
-    [ ] log StdErr in error.log. Format: `hash \n exception (also log exceptions from worker)`
+#### New make.py script
+- [ ] makes sure that the dependencies are met
+- [ ] compiles `api.go`
+#### endpoint.rb
+- [ ] generate unique hash on startup and pass it to the API
+#### api.go
+- [ ] take two args: endpoint hash and RPN expression
+- [ ] new input.log format: `date hash input execTime`
+- [ ] log StdErr in error.log. Format: `hash \n exception (also log exceptions from worker)`
 
 [here]: https://drive.google.com/drive/folders/1nweyNIvOPzCxzVGGL3a9n_3ExE0sKnYQ?usp=sharing
