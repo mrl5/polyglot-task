@@ -14,7 +14,7 @@ puts "\tNth RPN expression"
 puts ""
 puts "If you change your mind, hit Ctrl+C to end this app"
 puts ""
-puts "Your input:"
+puts "Input:"
 
 # save input and (.chomp) remove carriage return from end of the input string
 inp = gets.chomp
@@ -40,6 +40,8 @@ end
 if no_of_expressions.is_a? Integer
 	if no_of_expressions > 0
 		expressions = get_RPN_expressions(no_of_expressions)
+		puts ""
+		puts "Output:"
 		pass_to_api(expressions)
 	else
 		raise("Number of RPN expressions must be greather than 0")
