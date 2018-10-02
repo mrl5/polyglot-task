@@ -22,6 +22,12 @@ def welcome_message()
 	puts "Input:"
 end
 
+def check_args()
+	if ARGV.length > 0
+		abort("No arguments allowed. Aborting.")
+	end
+end
+
 def init_func()
 	# save input and (.chomp) remove carriage return from end of the input string
 	inp = gets.chomp
@@ -46,6 +52,7 @@ def pass_to_api(arguments)
 end
 
 # main
+check_args
 welcome_message
 no_of_expressions = init_func
 if no_of_expressions.is_a? Integer
