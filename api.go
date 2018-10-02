@@ -69,15 +69,14 @@ func logInput(input string) {
 	}
 }
 
-func executeWorker(pathToWorker string, argument string) (error, []byte, float64) {
+func executeWorker(pathToWorker string, argument string) (error, []byte) {
 	workerProcess := exec.Command(pathToWorker, argument)
-	start := time.Now()
 	output, err := workerProcess.Output()
-	elapsed := time.Since(start).Seconds()
-	return err, output, elapsed
+	return err, output
 }
 
 func main() {
+	start := time.Now()
 	var elapsedTime string
 	/* path to directory of binary version of this program */
 	workDir, workDirErr := filepath.Abs(filepath.Dir(os.Args[0]))
@@ -91,7 +90,8 @@ func main() {
 	/* check input syntax */
 	if _, argErr := checkInput(); argErr == nil {
 		pathToWorker := path.Join(workDir, WORKER)
-		err, result, execTime := executeWorker(pathToWorker, os.Args[1])
+		err, result := executeWorker(pathToWorker, os.Args[1])
+		execTime := time.Since(start).Seconds()
 		elapsedTime = strconv.FormatFloat(execTime, 'f', 3, 64)
 		if err != nil {
 			fmt.Println(ERROR_MSG)
