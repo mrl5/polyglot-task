@@ -7,9 +7,11 @@ import (
 	"path/filepath"
 	"os/user"
 	"path"
+	"os/exec"
 )
 
 var logsDir = ""
+const WORKER = "worker.py"
 const APP_DIR string = "polyglot-task-by-JK-aka-mrl5"
 const INPUT_LOG_FILE string = "input.log"
 const APPDIR_PERMISSION = 0750 //owner can do anything with directory, group member can list directory and see rights, others wont see dir content
@@ -55,15 +57,19 @@ func checkForFile(pathToFile string) {
 
 func logInput(input string) {
 	f, err := os.OpenFile(pathToInputLog, os.O_APPEND|os.O_WRONLY, LOGFILES_PERMISSION)
-	if err != nil {
-		panic(err)
-	}
-
+	checkError(err)
 	defer f.Close()
 
 	if _, err = f.WriteString(input); err != nil {
 		panic(err)
 	}
+}
+
+func executeWorker(pathToWorker string, argument string) {
+	workerProcess := exec.Command(pathToWorker, argument)
+	output, err := workerProcess.Output()
+	checkError(err)
+	fmt.Println(string(output))
 }
 
 func main() {
@@ -77,9 +83,8 @@ func main() {
 
 	/* check input syntax */
 	if _, argErr := checkInput(); argErr == nil {
-		fmt.Println("Work dir: " + workDir)
-		fmt.Println("Logs dir: " + logsDir)
-		fmt.Println("Arg: " + os.Args[1])
+		pathToWorker := path.Join(workDir, WORKER)
+		executeWorker(pathToWorker, os.Args[1])
 		logInput(os.Args[1] + "\n")
 	} else {
 		fmt.Println(argErr)
