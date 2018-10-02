@@ -82,6 +82,7 @@ func main() {
 	/* path to directory of binary version of this program */
 	workDir, workDirErr := filepath.Abs(filepath.Dir(os.Args[0]))
 	checkError(workDirErr)
+
 	usrEnv, usrEnvErr := user.Current()
 	checkError(usrEnvErr)
 
@@ -97,8 +98,8 @@ func main() {
 		} else {
 			fmt.Println(strings.Trim(string(result), "\n") + ", " + elapsedTime)
 		}
-		logInput(os.Args[1] + "\t" + elapsedTime + "\n")
 	} else {
 		fmt.Println(argErr)
 	}
+	logInput(os.Args[1] + "\t" + elapsedTime + "\n")
 }
