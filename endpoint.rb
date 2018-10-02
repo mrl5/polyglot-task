@@ -7,7 +7,7 @@ api_name = "worker.py"
 $api = File.join(script_path, api_name)
 
 def welcome_message()
-	puts "Reverse Polish notation app"
+	puts "=== Reverse Polish notation app ==="
 	puts ""
 	puts "Input syntax:"
 	puts "\tNumber of RPN expressions"
