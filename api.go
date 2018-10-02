@@ -12,9 +12,9 @@ import (
 var logsDir = ""
 const APP_DIR string = "polyglot-task-by-JK-aka-mrl5"
 const INPUT_LOG_FILE string = "input.log"
-const OUTPUT_LOG_FILE string = "output.log"
 const APPDIR_PERMISSION = 0750 //owner can do anything with directory, group member can list directory and see rights, others wont see dir content
 const LOGFILES_PERMISSION = 0640 //RW for owner, R for group, nothing for others (0640)
+var pathToInputLog string
 
 func checkInput() (int, error) {
 	switch len(os.Args) {
@@ -37,20 +37,33 @@ func checkEnvironment(usrDir string) {
 	if logsDir == "" {
 		logsDir = path.Join(usrDir, APP_DIR)
 	}
-	pathToInputLog := path.Join(logsDir, INPUT_LOG_FILE)
-	pathToOutputLog := path.Join(logsDir, OUTPUT_LOG_FILE)
+	pathToInputLog = path.Join(logsDir, INPUT_LOG_FILE)
 
 	/* create logs dir if doesn't exist, ignore error when exists */
 	_ = os.Mkdir(logsDir, APPDIR_PERMISSION)
 
 	/* check if log files exists */
-	logFileExists(pathToInputLog)
-	logFileExists(pathToOutputLog)
+	checkForFile(pathToInputLog)
 }
 
-func logFileExists(pathToFile string) {
-	/* checks if file exists */
+func checkForFile(pathToFile string) {
+	/** checks if file exists
+	 *  creates when doesn't
+	 */
 	os.OpenFile(pathToFile, os.O_RDONLY|os.O_CREATE, LOGFILES_PERMISSION)
+}
+
+func logInput(input string) {
+	f, err := os.OpenFile(pathToInputLog, os.O_APPEND|os.O_WRONLY, LOGFILES_PERMISSION)
+	if err != nil {
+		panic(err)
+	}
+
+	defer f.Close()
+
+	if _, err = f.WriteString(input); err != nil {
+		panic(err)
+	}
 }
 
 func main() {
@@ -67,6 +80,7 @@ func main() {
 		fmt.Println("Work dir: " + workDir)
 		fmt.Println("Logs dir: " + logsDir)
 		fmt.Println("Arg: " + os.Args[1])
+		logInput(os.Args[1] + "\n")
 	} else {
 		fmt.Println(argErr)
 	}
