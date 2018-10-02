@@ -1,7 +1,10 @@
 #!/usr/bin/env ruby
 
-# global variable for API
-$api = "./worker.py"
+# stores path of this script
+script_path = File.dirname(File.expand_path $0)
+api_name = "worker.py"
+# global variable: path to API
+$api = File.join(script_path, api_name)
 
 puts "Reverse Polish notation app"
 puts ""
