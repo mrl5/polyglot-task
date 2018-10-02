@@ -3,7 +3,7 @@
 ## Table of contents
 * [Dependencies](#dependencies)
 * [Task](#task)
-* [My way](#my-way)
+* [ToDo](#todo)
 
 ## Dependencies
 - Python3.4 (or higher)
@@ -36,11 +36,14 @@ Where:
 
 #### Architecture
 1. Endpoint interface for gathering input data (stdin) and output results (stdout)
-2. API for getting , sending to the worker and logging input and timings. Logs should be
+2. API for getting, sending to the worker and logging input and timings. Logs should be
 saved to a file.
 3. Worker responsible for the process of calculation
 
-## My way
-1. "Worker" = Python: computes RPN expressions, throws exceptions on bad input
-2. "API" (requests, spawning worker processes, logging) = Go
-3. Endpoint interface: Ruby or Ruby on Rails (probably the second one)
+## ToDo
+1. endpoint.rb
+    [ ] generate unique hash on startup and pass it to the API
+2. api.go
+    [ ] take two args: endpoint hash and RPN expression
+    [ ] new input.log format: `date hash input execTime`
+    [ ] log StdErr in error.log. Format: `hash \n exception (also log exceptions from worker)`
