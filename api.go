@@ -10,12 +10,13 @@ import (
 	"os/exec"
 )
 
-var logsDir = ""
 const WORKER = "worker.py"
 const APP_DIR string = "polyglot-task-by-JK-aka-mrl5"
 const INPUT_LOG_FILE string = "input.log"
 const APPDIR_PERMISSION = 0750 //owner can do anything with directory, group member can list directory and see rights, others wont see dir content
 const LOGFILES_PERMISSION = 0640 //RW for owner, R for group, nothing for others (0640)
+const ERROR_MSG = "error"
+var logsDir = ""
 var pathToInputLog string
 
 func checkInput() (int, error) {
@@ -65,11 +66,10 @@ func logInput(input string) {
 	}
 }
 
-func executeWorker(pathToWorker string, argument string) {
+func executeWorker(pathToWorker string, argument string) (error, []byte) {
 	workerProcess := exec.Command(pathToWorker, argument)
 	output, err := workerProcess.Output()
-	checkError(err)
-	fmt.Println(string(output))
+	return err, output
 }
 
 func main() {
@@ -84,7 +84,12 @@ func main() {
 	/* check input syntax */
 	if _, argErr := checkInput(); argErr == nil {
 		pathToWorker := path.Join(workDir, WORKER)
-		executeWorker(pathToWorker, os.Args[1])
+		err, result := executeWorker(pathToWorker, os.Args[1])
+		if err != nil {
+			fmt.Println(ERROR_MSG)
+		} else {
+			fmt.Println(string(result))
+		}
 		logInput(os.Args[1] + "\n")
 	} else {
 		fmt.Println(argErr)
