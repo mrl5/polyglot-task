@@ -72,7 +72,7 @@ Where:
 
 #### Architecture
 1. Endpoint interface for gathering input data (stdin) and output results (stdout)
-2. API for getting, sending to the worker and logging input and timings. Logs should be
+2. API for getting requests, sending to the worker and logging input and timings. Logs should be
 saved to a file.
 3. Worker responsible for the process of calculation
 
