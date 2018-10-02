@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
+
+# global variable for API
+$api = "./worker.py"
+
 puts "Reverse Polish notation app"
 puts ""
 puts "Input syntax:"
@@ -18,7 +22,6 @@ inp = gets.chomp
 no_of_expressions = inp.to_i
 
 def get_RPN_expressions(no_of_exp)
-	puts "Lets go!"
 	expressions = Array.new
 	no_of_exp.times do
 		expression = gets.chomp
@@ -27,10 +30,17 @@ def get_RPN_expressions(no_of_exp)
 	return expressions
 end
 
+def pass_to_api(arguments)
+	for argument in arguments
+		system( $api + " " + "\"" + argument + "\"" )
+	end
+end
+
 # main
 if no_of_expressions.is_a? Integer
 	if no_of_expressions > 0
-		puts get_RPN_expressions(no_of_expressions)
+		expressions = get_RPN_expressions(no_of_expressions)
+		pass_to_api(expressions)
 	else
 		raise("Number of RPN expressions must be greather than 0")
 	end
