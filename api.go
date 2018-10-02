@@ -17,15 +17,21 @@ func checkInput() (int, error) {
 	}
 }
 
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
 func main() {
 	/* path to binary version of this program */
 	pathToProgram := os.Args[0]
-	fmt.Println("Path: " + pathToProgram)
 
-	if r, e := checkInput(); e == nil {
+	/* check input syntax */
+	if _, e := checkInput(); e == nil {
+		fmt.Println("Path: " + pathToProgram)
 		fmt.Println("Arg: " + os.Args[1])
 	} else {
-		fmt.Println("return code: ", r)
-		fmt.Println(e)
+		check(e)
 	}
 }
