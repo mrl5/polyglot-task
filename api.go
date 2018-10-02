@@ -8,6 +8,9 @@ import (
 	"os/user"
 	"path"
 	"os/exec"
+	"time"
+	"strconv"
+	"strings"
 )
 
 const WORKER = "worker.py"
@@ -66,13 +69,16 @@ func logInput(input string) {
 	}
 }
 
-func executeWorker(pathToWorker string, argument string) (error, []byte) {
+func executeWorker(pathToWorker string, argument string) (error, []byte, float64) {
 	workerProcess := exec.Command(pathToWorker, argument)
+	start := time.Now()
 	output, err := workerProcess.Output()
-	return err, output
+	elapsed := time.Since(start).Seconds()
+	return err, output, elapsed
 }
 
 func main() {
+	var elapsedTime string
 	/* path to directory of binary version of this program */
 	workDir, workDirErr := filepath.Abs(filepath.Dir(os.Args[0]))
 	checkError(workDirErr)
@@ -84,13 +90,14 @@ func main() {
 	/* check input syntax */
 	if _, argErr := checkInput(); argErr == nil {
 		pathToWorker := path.Join(workDir, WORKER)
-		err, result := executeWorker(pathToWorker, os.Args[1])
+		err, result, execTime := executeWorker(pathToWorker, os.Args[1])
+		elapsedTime = strconv.FormatFloat(execTime, 'f', 3, 64)
 		if err != nil {
 			fmt.Println(ERROR_MSG)
 		} else {
-			fmt.Println(string(result))
+			fmt.Println(strings.Trim(string(result), "\n") + ", " + elapsedTime)
 		}
-		logInput(os.Args[1] + "\n")
+		logInput(os.Args[1] + "\t" + elapsedTime + "\n")
 	} else {
 		fmt.Println(argErr)
 	}
