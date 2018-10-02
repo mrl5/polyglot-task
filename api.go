@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"os"
 	"errors"
+	"path/filepath"
+	"os/user"
 )
+
 
 func checkInput() (int, error) {
 	switch len(os.Args) {
@@ -17,21 +20,25 @@ func checkInput() (int, error) {
 	}
 }
 
-func check(e error) {
+func checkError(e error) {
 	if e != nil {
 		panic(e)
 	}
 }
 
 func main() {
-	/* path to binary version of this program */
-	pathToProgram := os.Args[0]
+	/* path to directory of binary version of this program */
+	workDir, werr := filepath.Abs(filepath.Dir(os.Args[0]))
+	checkError(werr)
+	usrEnv, uerr := user.Current()
+	checkError(uerr)
 
 	/* check input syntax */
-	if _, e := checkInput(); e == nil {
-		fmt.Println("Path: " + pathToProgram)
+	if _, argerr := checkInput(); argerr == nil {
+		fmt.Println("Work dir: " + workDir)
+		fmt.Println("User dir: " + usrEnv.HomeDir)
 		fmt.Println("Arg: " + os.Args[1])
 	} else {
-		check(e)
+		fmt.Println(argerr)
 	}
 }
