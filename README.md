@@ -9,6 +9,7 @@
 - Python3.4 (or higher)
     - `pytest` library (if you want to run tests)
 - Ruby 2.3 (or higher)
+- go1.10
 
 ## Task
 #### Input:
