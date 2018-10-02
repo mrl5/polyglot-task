@@ -2,7 +2,7 @@
 
 # stores path of this script
 script_path = File.dirname(File.expand_path $0)
-api_name = "worker.py"
+api_name = "api"
 api = File.join(script_path, api_name)
 # global variable: command to run the API
 $api_cmd = api
