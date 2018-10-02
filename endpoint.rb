@@ -3,8 +3,9 @@
 # stores path of this script
 script_path = File.dirname(File.expand_path $0)
 api_name = "worker.py"
-# global variable: path to API
-$api = File.join(script_path, api_name)
+api = File.join(script_path, api_name)
+# global variable: command to run the API
+$api_cmd = api
 
 def welcome_message()
 	puts "=== Reverse Polish notation app ==="
@@ -40,7 +41,7 @@ end
 
 def pass_to_api(arguments)
 	for argument in arguments
-		system( $api + " " + "\"" + argument + "\"" )
+		system( $api_cmd + " \"" + argument + "\"" )
 	end
 end
 
