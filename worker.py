@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # based on Yehonathan Sharvit blog post: https://blog.klipse.tech/python/2016/09/22/python-reverse-polish-evaluator.html
