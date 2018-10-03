@@ -26,7 +26,8 @@
 3. Go to the application's directory
     - `cd polyglot-task`
 4. Compile `api.go`
-    - make sure that you are inside application's directory `pwd -P`
+    - make sure that you are inside application's directory `pwd -P | xargs basename` (you should get `polyglot-task
+`)
     - `go build api.go`
 5. Make sure that `endpoint.rb`, `api` and `worker.py` are executable
     - if you are running on GNU/Linux run `chmod +x endpoint.rb api worker.py`
