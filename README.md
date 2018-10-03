@@ -15,7 +15,7 @@
 
 ## Getting started
 0. Your OS:
-    - if you are not running on a GNU/Linux OS, you will have to change the [shebangs](https://en.wikipedia.org/wiki/Shebang_(Unix)) for `endpoint.rb` and `worker.py`
+    - if you are not running on a GNU/Linux OS, you are on your own with debugging
 1. Check for dependencies
     - Python: `python --version`
     - Ruby: `ruby --version`
@@ -35,6 +35,8 @@
 7. Logfile will be stored in folder `polyglot-task-by-JK-aka-mrl5` in your user's home directory (e.g. `/home/kuba/polyglot-task-by-JK-aka-mrl5`)
 
 ## Troubleshooting
+- `api.go` doesn't compile!
+    - download the binary version from [here] (memento section **5** from "Getting started")
 - error: `sh: /home/kuba/test/polyglot-task/api: No such file or directory`
     - there is no `api` binary file in project's directory: check sections **3** and **4** for the solution
 - error: `sh: /home/kuba/test/polyglot-task/api: Permission denied`
@@ -44,8 +46,6 @@
     - if your RPN expression is valid your user has no permission to run `worker.py` file: check section **5** for a solution
     - if you can't change file permission you should clone or extract the project inside your user's home directory
     - if none of above works, try running `python worker.py "<your RPN_expression>"` (e.g. `python worker.py "1 1 +"`) python interpreter should give you more information about what went wrong
-- `api.go` doesn't compile!
-    - download the binary version from [here] (memento section **5** from "Getting started")
 
 ## Task
 #### Input:
@@ -77,9 +77,10 @@ saved to a file.
 3. Worker responsible for the process of calculation
 
 ## ToDo
-#### New make.py script
+#### New script: installer.py
 - [ ] makes sure that the dependencies are met
 - [ ] compiles `api.go`
+- [ ] makes sure that files have right permissions
 #### endpoint.rb
 - [ ] generate unique hash on startup and pass it to the API
 #### api.go
