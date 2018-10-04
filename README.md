@@ -83,7 +83,7 @@ saved to a file.
 - [ ] compiles `api.go`
 - [ ] makes sure that files have right permissions
 #### endpoint.rb
-- [ ] generate unique hash on startup and pass it to the API
+- [x] generate UUID on startup and pass it to the API
 - [ ] pass all input RPN expressions to the API at once (e.g. `api hash-request-id RPNexpr_1 RPNexpr_2 RPNexpr_n`)
 #### api.go
 - [ ] take two args: endpoint hash and RPN expression
