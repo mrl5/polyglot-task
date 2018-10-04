@@ -49,7 +49,7 @@ end
 
 def pass_to_api(arguments)
 	for argument in arguments
-		system( $api_cmd + " \"" + argument + "\"" )
+		system( $api_cmd + " \'" + argument + "\'" )
 	end
 end
 
