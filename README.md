@@ -26,7 +26,8 @@
 3. Go to the application's directory
     - `cd polyglot-task`
 4. Compile `api.go`
-    - make sure that you are inside application's directory `pwd -P`
+    - make sure that you are inside application's directory `pwd -P | xargs basename` (you should get `polyglot-task
+`)
     - `go build api.go`
 5. Make sure that `endpoint.rb`, `api` and `worker.py` are executable
     - if you are running on GNU/Linux run `chmod +x endpoint.rb api worker.py`
@@ -83,9 +84,14 @@ saved to a file.
 - [ ] makes sure that files have right permissions
 #### endpoint.rb
 - [ ] generate unique hash on startup and pass it to the API
+- [ ] pass all input RPN expressions to the API at once (e.g. `api hash-request-id RPNexpr_1 RPNexpr_2 RPNexpr_n`)
 #### api.go
 - [ ] take two args: endpoint hash and RPN expression
 - [ ] new input.log format: `date hash input execTime`
-- [ ] log StdErr in error.log. Format: `hash \n exception (also log exceptions from worker)`
+- [ ] log StdErr in error.log. Format: `hash \n exception` (also log exceptions from `worker.py`)
+###### goroutines
+- [ ] accept multiple RPN expressions at once
+- [ ] run `worker.py` for every expression as a *goroutine*
+- [ ] return output after last expression was calculated
 
 [here]: https://drive.google.com/drive/folders/1nweyNIvOPzCxzVGGL3a9n_3ExE0sKnYQ?usp=sharing
