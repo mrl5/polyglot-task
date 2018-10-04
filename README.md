@@ -84,9 +84,14 @@ saved to a file.
 - [ ] makes sure that files have right permissions
 #### endpoint.rb
 - [ ] generate unique hash on startup and pass it to the API
+- [ ] pass all input RPN expressions to the API at once (e.g. `api hash-request-id RPNexpr_1 RPNexpr_2 RPNexpr_n`)
 #### api.go
 - [ ] take two args: endpoint hash and RPN expression
 - [ ] new input.log format: `date hash input execTime`
-- [ ] log StdErr in error.log. Format: `hash \n exception (also log exceptions from worker)`
+- [ ] log StdErr in error.log. Format: `hash \n exception` (also log exceptions from `worker.py`)
+###### goroutines
+- [ ] accept multiple RPN expressions at once
+- [ ] run `worker.py` for every expression as a *goroutine*
+- [ ] return output after last expression was calculated
 
 [here]: https://drive.google.com/drive/folders/1nweyNIvOPzCxzVGGL3a9n_3ExE0sKnYQ?usp=sharing
