@@ -45,15 +45,15 @@ class Worker:
             self.strerror = "Expression has non-valid RPN syntax: {}".format(expression)
 
 
-def main():
-    allowed_args = 2 if sys.argv[0] == __file__ else 1
-    if len(sys.argv) != allowed_args:
+def main(args):
+    allowed_no_of_args = 1
+    if len(args) != allowed_no_of_args:
         raise Exception("Script accepts one and only one argument.")
-    expression = sys.argv[1] if sys.argv[0] == __file__ else sys.argv[0]
     worker = Worker()
+    expression = args[0]
     print(worker.evaluate(expression))
 
 
 if __name__ == "__main__":
     import sys
-    main()
+    sys.exit(main(sys.argv[1:]))
