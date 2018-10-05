@@ -12,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 	"flag"
+	"sync"
+	"sort"
 )
 
 /* worker related constants */
@@ -70,8 +72,8 @@ func checkEnvironment(usrDir string) {
 	os.OpenFile(pathToRequestsLog, os.O_RDONLY|os.O_CREATE, LOGFILES_PERMISSION)
 }
 
-func checkInput() (int, error) {
-	switch len(flag.Args()) {
+func checkInput(noOfArgs int) (int, error) {
+	switch noOfArgs {
 	default:
 		return 0, nil
 	case 0:
@@ -105,11 +107,38 @@ func logRequest(requestStart time.Time, noOfArguments int) {
 	}
 }
 
-func executeWorker(pathToWorker string, argument string) (error, []byte, time.Duration) {
+
+/* goroutines framework */
+type workerReturn struct {
+	id int
+	err error
+	output []byte
+	elapsedTime time.Duration
+}
+
+type workerReturnArr []workerReturn
+var workerReturns workerReturnArr
+
+func (wr workerReturnArr) Len() int {
+	return len(wr)
+}
+
+func (wr workerReturnArr) Less(i, j int) bool {
+	return wr[i].id < wr[j].id
+}
+
+func (wr workerReturnArr) Swap(i, j int) {
+	wr[i], wr[j] = wr[j], wr[i]
+}
+/* /goroutines framework */
+
+func executeWorker(pathToWorker string, argument string, id int, wg *sync.WaitGroup) {
 	start := time.Now()
 	workerProcess := exec.Command(pathToWorker, argument)
 	output, err := workerProcess.Output()
-	return err, output, time.Since(start)
+	/* add return to the array of returns */
+	workerReturns = append(workerReturns, workerReturn{id, err, output, time.Since(start)})
+	wg.Done()
 }
 
 func main() {
@@ -125,17 +154,36 @@ func main() {
 	checkError(usrEnvErr)
 	checkEnvironment(usrEnv.HomeDir)
 
-	if _, argErr := checkInput(); argErr == nil {
-		for i := 0; i < len(flag.Args()); i++ {
-			err, output, elapsedTime := executeWorker(pathToWorker, flag.Arg(i))
-			result := strings.Trim(string(output), "\n")
-			formattedTime := strconv.FormatFloat(elapsedTime.Seconds(), 'f', 3, 64)
-			if err != nil {
+	noOfArgs := len(flag.Args())
+
+	if _, argErr := checkInput(noOfArgs); argErr == nil {
+		/* sync.WaitGroup waits for a group of goroutines to finish */
+		var wg sync.WaitGroup
+		wg.Add(noOfArgs)
+
+		for i := 0; i < noOfArgs; i++ {
+			go executeWorker(pathToWorker, flag.Arg(i), i, &wg)
+		}
+		/* wait until all executeWorker processes will end */
+		wg.Wait()
+		/* FIFO sorting (by id) */
+		sort.Sort(workerReturns)
+
+		for i := 0; i < noOfArgs; i++ {
+			var result string
+			formattedTime := strconv.FormatFloat(
+				workerReturns[i].elapsedTime.Seconds(), 'f', 3, 64)
+
+			if workerReturns[i].err != nil {
 				result = ERROR_MSG
+			} else {
+				result = strings.Trim(
+					string(workerReturns[i].output), "\n")
 			}
 			fmt.Println(result + ", " + formattedTime)
 			logInput(flag.Arg(i), formattedTime)
 		}
+
 	} else {
 		fmt.Println(argErr)
 	}
