@@ -88,7 +88,8 @@ saved to a file.
 #### api.go
 - [x] "--uuid" flag: endpoint UUID
 - [x] new `input.log` format (containing UUID)
-- [ ] log StdErr in error.log. Format: `UUID \n exception` (also log exceptions from `worker.py`)
+- [ ] log requests in `requests.log`
+- [ ] log StdErr in error.log
 ###### goroutines
 - [ ] accept multiple RPN expressions at once
 - [ ] run `worker.py` for every expression as a *goroutine*
