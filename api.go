@@ -84,8 +84,8 @@ func logInput(input string, elapsedProcessTime string) {
 	checkError(err)
 	defer f.Close()
 
-	/* uuid input elapsed-time */
-	logLine := endpointUUID + "\t" + input + "\t" + elapsedProcessTime + "\n"
+	/* uuid elapsed-time input */
+	logLine := endpointUUID + "\t" + elapsedProcessTime + "\t" + input + "\n"
 	if _, err = f.WriteString(logLine); err != nil {
 		panic(err)
 	}
@@ -96,9 +96,10 @@ func logRequest(requestStart time.Time, noOfArguments int) {
 	checkError(err)
 	defer f.Close()
 
-	/* date uuid number-of-args elapsed-time */
-	logLine := "[" + requestStart.UTC().String() + "]\t" + endpointUUID + "\t"  + strconv.Itoa(noOfArguments) + "\t" +
-		strconv.FormatFloat(time.Since(requestStart).Seconds(), 'f', 3, 64) + "\n"
+	/* date uuid elapsed-time number-of-args */
+	logLine := "[" + requestStart.UTC().String() + "]\t" + endpointUUID + "\t"  +
+		strconv.FormatFloat(time.Since(requestStart).Seconds(), 'f', 3, 64) + "\t" +
+		strconv.Itoa(noOfArguments) + "\n"
 	if _, err = f.WriteString(logLine); err != nil {
 		panic(err)
 	}
