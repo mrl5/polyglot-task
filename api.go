@@ -37,13 +37,13 @@ var pathToRequestsLog string
 func setFlags() {
 	/* flags related constants */
 	const (
-		DEFAULT_UUID = "internal"
-		UUID_USAGE = "Universally Unique IDentifier of an endpoint request"
+		defaultUUID = "internal"
+		uuidUsage = "Universally Unique IDentifier of the endpoint request"
 	)
 
 	/* UUID */
-	flag.StringVar(&endpointUUID, "uuid", DEFAULT_UUID, UUID_USAGE)
-	flag.StringVar(&endpointUUID, "u", DEFAULT_UUID, UUID_USAGE+" (shorthand)")
+	flag.StringVar(&endpointUUID, "uuid", defaultUUID, uuidUsage)
+	flag.StringVar(&endpointUUID, "u", defaultUUID, uuidUsage+" (shorthand)")
 
 	/* parse all defined flags */
 	flag.Parse()
@@ -62,10 +62,10 @@ func checkEnvironment(usrDir string) {
 	pathToInputLog = path.Join(logsDir, INPUT_LOG_FILE)
 	pathToRequestsLog = path.Join(logsDir, REQUESTS_LOG_FILE)
 
-	/* create logs dir if doesn't exist, ignore error when exists */
+	/* create logs dir if doesn't exist, ignore error when it exists */
 	_ = os.Mkdir(logsDir, APPDIR_PERMISSION)
 
-	/* check if log files exists */
+	/* check if log files exist, create when they don't */
 	os.OpenFile(pathToInputLog, os.O_RDONLY|os.O_CREATE, LOGFILES_PERMISSION)
 	os.OpenFile(pathToRequestsLog, os.O_RDONLY|os.O_CREATE, LOGFILES_PERMISSION)
 }
@@ -84,6 +84,7 @@ func logInput(input string, elapsedProcessTime string) {
 	checkError(err)
 	defer f.Close()
 
+	/* uuid input elapsed-time */
 	logLine := endpointUUID + "\t" + input + "\t" + elapsedProcessTime + "\n"
 	if _, err = f.WriteString(logLine); err != nil {
 		panic(err)
@@ -95,6 +96,7 @@ func logRequest(requestStart time.Time, noOfArguments int) {
 	checkError(err)
 	defer f.Close()
 
+	/* date uuid number-of-args elapsed-time */
 	logLine := "[" + requestStart.UTC().String() + "]\t" + endpointUUID + "\t"  + strconv.Itoa(noOfArguments) + "\t" +
 		strconv.FormatFloat(time.Since(requestStart).Seconds(), 'f', 3, 64) + "\n"
 	if _, err = f.WriteString(logLine); err != nil {
