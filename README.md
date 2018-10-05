@@ -83,12 +83,12 @@ saved to a file.
 - [ ] compiles `api.go`
 - [ ] makes sure that files have right permissions
 #### endpoint.rb
-- [ ] generate unique hash on startup and pass it to the API
+- [x] generate UUID on startup and pass it to the API
 - [ ] pass all input RPN expressions to the API at once (e.g. `api hash-request-id RPNexpr_1 RPNexpr_2 RPNexpr_n`)
 #### api.go
-- [ ] take two args: endpoint hash and RPN expression
-- [ ] new input.log format: `date hash input execTime`
-- [ ] log StdErr in error.log. Format: `hash \n exception` (also log exceptions from `worker.py`)
+- [x] "--uuid" flag: endpoint UUID
+- [x] new `input.log` format (containing UUID)
+- [ ] log StdErr in error.log. Format: `UUID \n exception` (also log exceptions from `worker.py`)
 ###### goroutines
 - [ ] accept multiple RPN expressions at once
 - [ ] run `worker.py` for every expression as a *goroutine*

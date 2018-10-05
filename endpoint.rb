@@ -1,11 +1,13 @@
 #!/usr/bin/env ruby
 
+require 'securerandom'
+
 # stores path of this script
 script_path = File.dirname(File.expand_path $0)
 api_name = "api"
-api = File.join(script_path, api_name)
-# global variable: command to run the API
-$api_cmd = api
+api_path = File.join(script_path, api_name)
+# global variables
+$api_cmd = api_path + " " + "--uuid=" + SecureRandom.uuid
 
 def welcome_message()
 	puts "=== Reverse Polish notation app ==="
@@ -47,7 +49,7 @@ end
 
 def pass_to_api(arguments)
 	for argument in arguments
-		system( $api_cmd + " \"" + argument + "\"" )
+		system( $api_cmd + " \'" + argument + "\'" )
 	end
 end
 
