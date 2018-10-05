@@ -22,8 +22,9 @@ const (
 
 /* logging related constants */
 const (
-	APP_DIR = "polyglot-task-by-JK-aka-mrl5"
+	APP_DIR = "polyglot-task-by-JK-aka-mrl5-v20"
 	INPUT_LOG_FILE = "input.log"
+	REQUESTS_LOG_FILE = "requests.log"
 	APPDIR_PERMISSION = 0750   //owner can do anything with directory, group member can list directory and see rights, others wont see dir content
 	LOGFILES_PERMISSION = 0640 //RW for owner, R for group, nothing for others (0640)
 )
@@ -31,6 +32,7 @@ const (
 var endpointUUID string
 var logsDir = ""
 var pathToInputLog string
+var pathToRequestsLog string
 
 func setFlags() {
 	/* flags related constants */
@@ -67,12 +69,14 @@ func checkEnvironment(usrDir string) {
 		logsDir = path.Join(usrDir, APP_DIR)
 	}
 	pathToInputLog = path.Join(logsDir, INPUT_LOG_FILE)
+	pathToRequestsLog = path.Join(logsDir, REQUESTS_LOG_FILE)
 
 	/* create logs dir if doesn't exist, ignore error when exists */
 	_ = os.Mkdir(logsDir, APPDIR_PERMISSION)
 
 	/* check if log files exists */
 	os.OpenFile(pathToInputLog, os.O_RDONLY|os.O_CREATE, LOGFILES_PERMISSION)
+	os.OpenFile(pathToRequestsLog, os.O_RDONLY|os.O_CREATE, LOGFILES_PERMISSION)
 }
 
 func logInput(input string, elapsedProcessTime string) {
@@ -81,6 +85,17 @@ func logInput(input string, elapsedProcessTime string) {
 	defer f.Close()
 
 	logLine := endpointUUID + "\t" + input + "\t" + elapsedProcessTime + "\n"
+	if _, err = f.WriteString(logLine); err != nil {
+		panic(err)
+	}
+}
+
+func logRequest(requestStart string, elapsedRequestTime string) {
+	f, err := os.OpenFile(pathToRequestsLog, os.O_APPEND|os.O_WRONLY, LOGFILES_PERMISSION)
+	checkError(err)
+	defer f.Close()
+
+	logLine := "[" + requestStart + "]\t" + endpointUUID + "\t" + elapsedRequestTime + "\n"
 	if _, err = f.WriteString(logLine); err != nil {
 		panic(err)
 	}
@@ -120,5 +135,5 @@ func main() {
 	} else {
 		fmt.Println(argErr)
 	}
-	fmt.Println(strconv.FormatFloat(time.Since(start).Seconds(), 'f', 3, 64))
+	logRequest(start.UTC().String(), strconv.FormatFloat(time.Since(start).Seconds(), 'f', 3, 64))
 }
