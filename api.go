@@ -49,15 +49,6 @@ func setFlags() {
 	flag.Parse()
 }
 
-func checkInput() (int, error) {
-	switch len(flag.Args()) {
-	default:
-		return 0, nil
-	case 0:
-		return -1, errors.New("API error: expected at least one argument")
-	}
-}
-
 func checkError(e error) {
 	if e != nil {
 		panic(e)
@@ -77,6 +68,15 @@ func checkEnvironment(usrDir string) {
 	/* check if log files exists */
 	os.OpenFile(pathToInputLog, os.O_RDONLY|os.O_CREATE, LOGFILES_PERMISSION)
 	os.OpenFile(pathToRequestsLog, os.O_RDONLY|os.O_CREATE, LOGFILES_PERMISSION)
+}
+
+func checkInput() (int, error) {
+	switch len(flag.Args()) {
+	default:
+		return 0, nil
+	case 0:
+		return -1, errors.New("API error: expected at least one argument")
+	}
 }
 
 func logInput(input string, elapsedProcessTime string) {
