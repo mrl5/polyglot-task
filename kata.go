@@ -1,26 +1,44 @@
 package main
 
+// https://stackoverflow.com/questions/19208725/example-for-sync-waitgroup-correct
+// https://stackoverflow.com/questions/3387273/how-to-implement-resizable-arrays-in-go
+
 import (
 	"fmt"
 	"sync"
 	"time"
 )
 
-func dosomething(millisecs time.Duration, wg *sync.WaitGroup) {
-	duration := millisecs * time.Millisecond
+type mytype struct {
+	id, param int
+	//err error
+	//output []byte
+	//elapsedTime time.Duration
+}
+
+var goroutinesReturns []mytype
+
+func dosomething(id int, millisecs int, wg *sync.WaitGroup) {
+	duration := time.Duration(millisecs) * time.Millisecond
+	fmt.Println("START: Function in background, duration:", duration)
 	time.Sleep(duration)
-	fmt.Println("Function in background, duration:", duration)
+	fmt.Println("DONE: Function in background, duration:", duration)
+	goroutinesReturns = append(goroutinesReturns, mytype{id, millisecs})
 	wg.Done()
 }
 
 func main() {
 	var wg sync.WaitGroup
-	wg.Add(4)
-	go dosomething(6000, &wg)
-	go dosomething(1500, &wg)
-	go dosomething(4000, &wg)
-	go dosomething(2000, &wg)
+	const delta = 4
+	wg.Add(delta)
+
+	params := [delta]int{6000, 1500, 4000, 2000}
+
+	for i := 0; i < delta; i++ {
+		go dosomething(i, params[i], &wg)
+	}
 
 	wg.Wait()
 	fmt.Println("Done")
+	fmt.Println(goroutinesReturns)
 }
