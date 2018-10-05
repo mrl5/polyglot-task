@@ -7,7 +7,7 @@ script_path = File.dirname(File.expand_path $0)
 api_name = "api"
 api_path = File.join(script_path, api_name)
 # global variables
-$api_cmd = api_path + " " + SecureRandom.uuid
+$api_cmd = api_path + " " + "--uuid=" + SecureRandom.uuid
 
 def welcome_message()
 	puts "=== Reverse Polish notation app ==="
