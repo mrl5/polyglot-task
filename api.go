@@ -90,12 +90,13 @@ func logInput(input string, elapsedProcessTime string) {
 	}
 }
 
-func logRequest(requestStart string, elapsedRequestTime string) {
+func logRequest(requestStart time.Time, noOfArguments int) {
 	f, err := os.OpenFile(pathToRequestsLog, os.O_APPEND|os.O_WRONLY, LOGFILES_PERMISSION)
 	checkError(err)
 	defer f.Close()
 
-	logLine := "[" + requestStart + "]\t" + endpointUUID + "\t" + elapsedRequestTime + "\n"
+	logLine := "[" + requestStart.UTC().String() + "]\t" + endpointUUID + "\t"  + strconv.Itoa(noOfArguments) + "\t" +
+		strconv.FormatFloat(time.Since(requestStart).Seconds(), 'f', 3, 64) + "\n"
 	if _, err = f.WriteString(logLine); err != nil {
 		panic(err)
 	}
@@ -135,5 +136,5 @@ func main() {
 	} else {
 		fmt.Println(argErr)
 	}
-	logRequest(start.UTC().String(), strconv.FormatFloat(time.Since(start).Seconds(), 'f', 3, 64))
+	logRequest(start, len(flag.Args()))
 }
