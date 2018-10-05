@@ -48,10 +48,6 @@ func setFlags() {
 }
 
 func checkInput() (int, error) {
-	fmt.Println(os.Args)
-	fmt.Println(len(flag.Args()))
-	fmt.Println(flag.Args())
-	fmt.Println(endpointUUID)
 	switch len(flag.Args()) {
 	case 1:
 		return 0, nil
