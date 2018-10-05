@@ -2,11 +2,13 @@ package main
 
 // https://stackoverflow.com/questions/19208725/example-for-sync-waitgroup-correct
 // https://stackoverflow.com/questions/3387273/how-to-implement-resizable-arrays-in-go
+// https://gist.github.com/dnutiu/a899e48c95ff80fe98bada566e03251e
 
 import (
 	"fmt"
 	"sync"
 	"time"
+	"sort"
 )
 
 type mytype struct {
@@ -16,15 +18,28 @@ type mytype struct {
 	//elapsedTime time.Duration
 }
 
-var goroutinesReturns []mytype
+type mytypeArr []mytype
+var returns mytypeArr
 
 func dosomething(id int, millisecs int, wg *sync.WaitGroup) {
 	duration := time.Duration(millisecs) * time.Millisecond
 	fmt.Println("START: Function in background, duration:", duration)
 	time.Sleep(duration)
 	fmt.Println("DONE: Function in background, duration:", duration)
-	goroutinesReturns = append(goroutinesReturns, mytype{id, millisecs})
+	returns = append(returns, mytype{id, millisecs})
 	wg.Done()
+}
+
+func (s mytypeArr) Len() int {
+	return len(s)
+}
+
+func (s mytypeArr) Less(i, j int) bool {
+	return s[i].id < s[j].id
+}
+
+func (s mytypeArr) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
 }
 
 func main() {
@@ -40,5 +55,13 @@ func main() {
 
 	wg.Wait()
 	fmt.Println("Done")
-	fmt.Println(goroutinesReturns)
+
+	fmt.Println(returns)
+	fmt.Println(sort.IsSorted(returns))
+	sort.Sort(returns)
+	fmt.Println(returns)
+	fmt.Println(sort.IsSorted(returns))
+	sort.Sort(sort.Reverse(returns))
+	fmt.Println(returns)
+
 }
