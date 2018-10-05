@@ -41,16 +41,14 @@ end
 def get_RPN_expressions(no_of_exp)
 	expressions = Array.new
 	no_of_exp.times do
-		expression = gets.chomp
+		expression = "\'" + gets.chomp.gsub(/\t+/, ' ') + "\'"
 		expressions.push(expression)
 	end
 	return expressions
 end
 
 def pass_to_api(arguments)
-	for argument in arguments
-		system( $api_cmd + " \'" + argument + "\'" )
-	end
+	system( $api_cmd + " " + arguments.join(" ") )
 end
 
 # main

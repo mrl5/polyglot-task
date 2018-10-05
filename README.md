@@ -84,15 +84,15 @@ saved to a file.
 - [ ] makes sure that files have right permissions
 #### endpoint.rb
 - [x] generate UUID on startup and pass it to the API
-- [ ] pass all input RPN expressions to the API at once (e.g. `api hash-request-id RPNexpr_1 RPNexpr_2 RPNexpr_n`)
+- [x] pass all input RPN expressions to the API at once (e.g. `api hash-request-id RPNexpr_1 RPNexpr_2 RPNexpr_n`)
 #### api.go
 - [x] "--uuid" flag: endpoint UUID
 - [x] new `input.log` format (containing UUID)
-- [ ] log requests in `requests.log`
+- [x] log requests in `requests.log`
 - [ ] log StdErr in error.log
 ###### goroutines
-- [ ] accept multiple RPN expressions at once
-- [ ] run `worker.py` for every expression as a *goroutine*
-- [ ] return output after last expression was calculated
+- [x] accept multiple RPN expressions at once
+- [x] run `worker.py` for every expression as a *goroutine*
+- [x] return output after last expression was calculated
 
 [here]: https://drive.google.com/drive/folders/1nweyNIvOPzCxzVGGL3a9n_3ExE0sKnYQ?usp=sharing
