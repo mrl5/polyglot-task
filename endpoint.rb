@@ -41,7 +41,7 @@ end
 def get_RPN_expressions(no_of_exp)
 	expressions = Array.new
 	no_of_exp.times do
-		expression = "\'" + gets.chomp + "\'"
+		expression = "\'" + gets.chomp.gsub(/\t+/, ' ') + "\'"
 		expressions.push(expression)
 	end
 	return expressions
