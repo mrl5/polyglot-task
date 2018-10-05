@@ -2,8 +2,9 @@
 All **notable** changes to this project will be documented in this file.
 
 ## [v2.0-SNAPSHOT]
-- new `input.log` format: `<request UUID>	<execution time>	<input expression>`
 - `endpoint.rb` calls API **once**
+- `api.go` uses **goroutines** to call `worker.py`
+- new `input.log` format: `<request UUID>	<execution time>	<input expression>`
 - new logfile: `requests.log`
 
 ##  v1.0 - 2018-10-02

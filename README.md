@@ -92,7 +92,7 @@ saved to a file.
 - [ ] log StdErr in error.log
 ###### goroutines
 - [x] accept multiple RPN expressions at once
-- [ ] run `worker.py` for every expression as a *goroutine*
-- [ ] return output after last expression was calculated
+- [x] run `worker.py` for every expression as a *goroutine*
+- [x] return output after last expression was calculated
 
 [here]: https://drive.google.com/drive/folders/1nweyNIvOPzCxzVGGL3a9n_3ExE0sKnYQ?usp=sharing
