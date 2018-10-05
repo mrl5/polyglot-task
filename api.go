@@ -78,12 +78,7 @@ func checkEnvironment(usrDir string) {
 	_ = os.Mkdir(logsDir, APPDIR_PERMISSION)
 
 	/* check if log files exists */
-	checkForFile(pathToInputLog)
-}
-
-func checkForFile(pathToFile string) {
-	/* checks if file exists, creates when doesn't */
-	os.OpenFile(pathToFile, os.O_RDONLY|os.O_CREATE, LOGFILES_PERMISSION)
+	os.OpenFile(pathToInputLog, os.O_RDONLY|os.O_CREATE, LOGFILES_PERMISSION)
 }
 
 func logInput(input string) {
@@ -91,7 +86,8 @@ func logInput(input string) {
 	checkError(err)
 	defer f.Close()
 
-	if _, err = f.WriteString(input); err != nil {
+	logLine := endpointUUID + "\t" + input
+	if _, err = f.WriteString(logLine); err != nil {
 		panic(err)
 	}
 }
@@ -129,5 +125,5 @@ func main() {
 	} else {
 		fmt.Println(argErr)
 	}
-	logInput(os.Args[1] + "\t" + elapsedTime + "\n")
+	logInput(elapsedTime + "\t" + flag.Arg(0) + "\n")
 }
