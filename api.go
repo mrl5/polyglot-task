@@ -49,12 +49,10 @@ func setFlags() {
 
 func checkInput() (int, error) {
 	switch len(flag.Args()) {
-	case 1:
+	default:
 		return 0, nil
 	case 0:
-		return -1, errors.New("API error: expected an argument")
-	default:
-		return -2, errors.New("API error: only one argument is accepted")
+		return -1, errors.New("API error: expected at least one argument")
 	}
 }
 
@@ -77,49 +75,50 @@ func checkEnvironment(usrDir string) {
 	os.OpenFile(pathToInputLog, os.O_RDONLY|os.O_CREATE, LOGFILES_PERMISSION)
 }
 
-func logInput(input string) {
+func logInput(input string, elapsedProcessTime string) {
 	f, err := os.OpenFile(pathToInputLog, os.O_APPEND|os.O_WRONLY, LOGFILES_PERMISSION)
 	checkError(err)
 	defer f.Close()
 
-	logLine := endpointUUID + "\t" + input
+	logLine := endpointUUID + "\t" + input + "\t" + elapsedProcessTime + "\n"
 	if _, err = f.WriteString(logLine); err != nil {
 		panic(err)
 	}
 }
 
-func executeWorker(pathToWorker string, argument string) (error, []byte) {
+func executeWorker(pathToWorker string, argument string) (error, []byte, time.Duration) {
+	start := time.Now()
 	workerProcess := exec.Command(pathToWorker, argument)
 	output, err := workerProcess.Output()
-	return err, output
+	return err, output, time.Since(start)
 }
 
 func main() {
 	start := time.Now()
-	var elapsedTime string
 	setFlags()
 
 	/* path to the directory of binary version of this program */
 	workDir, workDirErr := filepath.Abs(filepath.Dir(os.Args[0]))
 	checkError(workDirErr)
+	pathToWorker := path.Join(workDir, WORKER)
 
 	usrEnv, usrEnvErr := user.Current()
 	checkError(usrEnvErr)
 	checkEnvironment(usrEnv.HomeDir)
 
-	/* check input syntax */
 	if _, argErr := checkInput(); argErr == nil {
-		pathToWorker := path.Join(workDir, WORKER)
-		err, result := executeWorker(pathToWorker, flag.Arg(0))
-		execTime := time.Since(start).Seconds()
-		elapsedTime = strconv.FormatFloat(execTime, 'f', 3, 64)
-		if err != nil {
-			fmt.Println(ERROR_MSG)
-		} else {
-			fmt.Println(strings.Trim(string(result), "\n") + ", " + elapsedTime)
+		for i := 0; i < len(flag.Args()); i++ {
+			err, output, elapsedTime := executeWorker(pathToWorker, flag.Arg(i))
+			result := strings.Trim(string(output), "\n")
+			formattedTime := strconv.FormatFloat(elapsedTime.Seconds(), 'f', 3, 64)
+			if err != nil {
+				result = ERROR_MSG
+			}
+			fmt.Println(result + ", " + formattedTime)
+			logInput(flag.Arg(i), formattedTime)
 		}
 	} else {
 		fmt.Println(argErr)
 	}
-	logInput(elapsedTime + "\t" + flag.Arg(0) + "\n")
+	fmt.Println(strconv.FormatFloat(time.Since(start).Seconds(), 'f', 3, 64))
 }
