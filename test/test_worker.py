@@ -11,12 +11,12 @@ __author__ = "mrl5"
 Scenario:
     - 'evaluate()' method should return expected values
     - 'evaluate()' method should ignore extra whitespaces
-    - test if 'evaluate()' method is run when worker.py is executed in console `python worker.py`
     - worker.py accepts only one argument else raises "Exception" exception
     - 'evaluate()' method should rise "CorruptedRPNExpressionError" custom exception when there are too many operators in RPN expression
     - 'evaluate()' method should rise "CorruptedRPNExpressionError" custom exception if list is not empty after evaluation
     - 'evaluate()' method should rise "CorruptedRPNExpressionError" custom exception if expression is empty
     - 'evaluate()' method should rise "ValueError" when expression has strings or other chars than defined in 'ops' dictionary
+    - test if 'evaluate()' method is run from main()
 """
 
 
@@ -63,31 +63,6 @@ def test_additional_whitespaces_in_expression(expected_results, worker_instance)
     assert expected_results == real_results
 
 
-def test_shell_subprocess(worker_instance):
-    test_file_location = os.path.dirname(os.path.realpath(__file__))
-    tested_file = os.path.join(os.path.dirname(test_file_location), "worker.py")
-    expression = "2 2 +"
-    result = worker_instance.evaluate(expression)
-    stdout_expected_result = str.encode(str(result) + "\n")
-    stdout = subprocess.check_output(["python", tested_file, expression])
-    assert stdout == stdout_expected_result
-
-
-def test_shell_subprocess_with_too_many_args():
-    test_file_location = os.path.dirname(os.path.realpath(__file__))
-    tested_file = os.path.join(os.path.dirname(test_file_location), "worker.py")
-    expression = "2 2 +"
-    with pytest.raises(subprocess.CalledProcessError):
-        subprocess.check_call(["python", tested_file, expression, "redundant expression"])
-
-
-def test_shell_subprocess_with_no_args():
-    test_file_location = os.path.dirname(os.path.realpath(__file__))
-    tested_file = os.path.join(os.path.dirname(test_file_location), "worker.py")
-    with pytest.raises(subprocess.CalledProcessError):
-        subprocess.check_call(["python", tested_file])
-
-
 def test_for_IndexError(worker_instance):
     corrupted_expression = "3 4 + -"
     with pytest.raises(worker_instance.CorruptedRPNExpressionError):
@@ -110,3 +85,12 @@ def test_disallowed_chars_in_expression(worker_instance):
     corrupted_expression = "abc 4 +"
     with pytest.raises(worker_instance.CorruptedRPNExpressionError):
         worker_instance.evaluate(corrupted_expression)
+
+
+def test_for_main(worker_instance):
+    test_file_location = os.path.dirname(os.path.realpath(__file__))
+    tested_file = os.path.join(os.path.dirname(test_file_location), "worker.py")
+    expression = "1 1 +"
+    cp = subprocess.run(["python3", tested_file, expression], stdout=subprocess.PIPE)
+    stdout = bytes(cp.stdout).decode().strip()
+    assert stdout == str(worker_instance.evaluate(expression))
