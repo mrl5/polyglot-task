@@ -18,7 +18,7 @@ class Installer:
         self._dependencies = {
             "python": {"version": 3, "present": None},
             "ruby": {"version": ["2.3", "2.4"], "present": None},
-            "go": {"version": "1.101", "present": None}
+            "go": {"version": "1.10", "present": None}
         }
         self._api_source = "api.go"
 
@@ -63,23 +63,32 @@ class Installer:
         return p and r and g
 
     def _build_api(self, path_to_api_src):
-        print("Building {} ...".format(self._api_source))
+        os.chdir(os.path.dirname(path_to_api_src))
+        print("\nBuilding {} ...\n".format(self._api_source))
+        build_cmd = ["go", "build", path_to_api_src]
+        go_build = subprocess.run(build_cmd)
+        return go_build.returncode
 
     def install(self):
         """
         Creates environment for the polyglot-task
         """
         this_file_dir = os.path.dirname(os.path.realpath(__file__))
+        path_to_api_src = os.path.join(this_file_dir, self._api_source)
         if self._verify_deps():
-            self._build_api(this_file_dir)
+            sleep(0.5)
+            go_build_return_code = self._build_api(path_to_api_src)
         else:
             if self._dependencies["go"]["present"]:
                 build_anyways = query_yes_no(
                     "Do you want to compile sources using Go {}?".format(self._dependencies["go"]["present"]))
-                self._build_api(this_file_dir) if build_anyways else False
+                sleep(0.5)
+                go_build_return_code = self._build_api(path_to_api_src) if build_anyways else False
             else:
                 sleep(2)
                 sys.exit("Could not call `go` from the console. Aborting.")
+        print("Done.") if go_build_return_code == 0 else sys.exit("\nBuilding {} failed. Aborting.".format(self._api_source))
+
 
 
 def get_ruby_version():

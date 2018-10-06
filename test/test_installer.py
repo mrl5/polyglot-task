@@ -18,11 +18,8 @@ Scenario:
     - '_verify_go()' should return false if other version 
     - '_compile_api()' should compile 'api.go'
     - binary file created by 'compile_api()' should be in project's directory
-    - 'verify_permission()' should return true if file is executable
-    - 'verify_permission()' should return false if file is not executable 
-    - 'set_executable_permission()' should set executable permission to the file
-    - 'set_executable_permission()' should throw 'OSError' when permission can't be set
-    - 'install()' should create a project with right structure
+    - 'set_permissions()' should set executable permissions to the files
+    - 'set_permissions()' should throw 'OSError' when permission can't be set
 """
 
 
