@@ -79,9 +79,9 @@ saved to a file.
 
 ## ToDo
 #### New script: installer.py
-- [ ] makes sure that the dependencies are met
-- [ ] compiles `api.go`
-- [ ] makes sure that files have right permissions
+- [x] makes sure that the dependencies are met
+- [x] compiles `api.go`
+- [x] makes sure that files have right permissions
 #### endpoint.rb
 - [x] generate UUID on startup and pass it to the API
 - [x] pass all input RPN expressions to the API at once (e.g. `api hash-request-id RPNexpr_1 RPNexpr_2 RPNexpr_n`)
