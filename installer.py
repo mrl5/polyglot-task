@@ -34,3 +34,6 @@ class Installer:
         verification = ruby_version in self._dependencies["ruby"]["version"]
         print(success_msg) if verification else print(fail_msg)
         return verification
+
+    def _verify_go(self, go_version):
+        pass
