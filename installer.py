@@ -17,7 +17,7 @@ class Installer:
         self._dependencies = {
             "python": {"version": 3, "present": None},
             "ruby": {"version": ["2.3", "2.4"], "present": None},
-            "go": {"version": "1.10", "present": None}
+            "go": {"version": "1.101", "present": None}
         }
 
     def _verify_python(self, sys_version_major):
@@ -52,11 +52,11 @@ class Installer:
 
     def _verify_deps(self):
         print("Checking for dependencies ...")
-        sleep(1)
+        sleep(0.5)
         p = self._verify_python(sys.version_info.major)
-        sleep(1)
+        sleep(0.5)
         r = self._verify_ruby(get_ruby_version())
-        sleep(1)
+        sleep(0.5)
         g = self._verify_go(get_go_version())
         return p and r and g
 
@@ -68,8 +68,8 @@ class Installer:
             pass
         else:
             if self._dependencies["go"]["present"]:
-                print(
-                    "Do you want to compile sources using Go {}? [yes/no]".format(self._dependencies["go"]["present"]))
+                query_yes_no(
+                    "Do you want to compile sources using Go {}?".format(self._dependencies["go"]["present"]))
             else:
                 sleep(2)
                 sys.exit("Could not call `go` from the console. Aborting.")
@@ -141,6 +141,21 @@ def get_go_version():
     except FileNotFoundError:
         print("[Error]\t`{}` command not found. Make sure that go is installed and added to the PATH".format(cmd))
     return go_version
+
+
+def query_yes_no(question):
+    valid = {"yes": True, "y": True,
+             "no": False, "n": False}
+
+    while True:
+        sys.stdout.write("{}: [yes/no] ".format(question))
+        choice = input().lower()
+        if choice == '':
+            return True
+        elif choice in valid:
+            return valid[choice]
+        else:
+            print("Try again")
 
 instlr = Installer()
 instlr.install()
