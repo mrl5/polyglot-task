@@ -25,3 +25,6 @@ class Installer:
         verification = self._dependencies["python"]["version"] == sys_version_major
         print(success_msg) if verification else print(fail_msg)
         return verification
+
+    def _verify_ruby(self, ruby_version):
+        pass

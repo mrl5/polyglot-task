@@ -38,3 +38,8 @@ def test_verify_python_success(installer_instance):
 def test_verify_python_fail(installer_instance):
     python_version_major = 2
     assert installer_instance._verify_python(python_version_major) is False
+
+
+def test_verify_ruby_success(installer_instance):
+    ruby_version = installer_instance._dependencies["ruby"]["version"][0]
+    assert installer_instance._verify_ruby(ruby_version) is True
