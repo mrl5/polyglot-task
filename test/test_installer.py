@@ -18,8 +18,7 @@ Scenario:
     - '_verify_go()' should return false if other version 
     - '_compile_api()' should compile 'api.go'
     - binary file created by 'compile_api()' should be in project's directory
-    - 'set_permissions()' should set executable permissions to the files
-    - 'set_permissions()' should throw 'OSError' when permission can't be set
+    - '_set_executable_permission()' should set executable permissions to the file
 """
 
 
@@ -87,3 +86,11 @@ def test_build_api(tmpdir, installer_instance):
     os.chdir(str(test_dir))
     installer_instance._build_api(api_dest)
     assert os.path.isfile(os.path.join(str(test_dir), binary_name))
+
+
+def test_set_permission(tmpdir, installer_instance):
+    test_file = tmpdir.mkdir("test_dir").join("hello.txt")
+    test_file.write("content")
+    print(str(test_file))
+    installer_instance._set_executable_permission(str(test_file))
+    assert os.access(str(test_file), os.X_OK)

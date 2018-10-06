@@ -21,6 +21,7 @@ class Installer:
             "go": {"version": "1.10", "present": None}
         }
         self._api_source = "api.go"
+        self._work_files = ["worker.py", "endpoint.rb", os.path.splitext(self._api_source)[0]]
 
     def _verify_python(self, sys_version_major):
         success_msg = "[OK]\tfound Python {}.{}.{}".format(
@@ -61,6 +62,12 @@ class Installer:
         sleep(0.5)
         g = self._verify_go(get_go_version())
         return p and r and g
+
+    def _set_executable_permission(self, path_to_file):
+        """
+        Sets executable permissions to the file
+        """
+        pass
 
     def _build_api(self, path_to_api_src):
         os.chdir(os.path.dirname(path_to_api_src))
@@ -161,7 +168,7 @@ def get_go_version():
 
 def query_yes_no(question):
     """
-    :param question: Question to be answered
+    :param question: question to be answered
     :return: answer
     """
     valid = {"yes": True, "y": True,
@@ -175,4 +182,4 @@ def query_yes_no(question):
         elif choice in valid:
             return valid[choice]
         else:
-            print("Try again")
+            print("Try again.")
