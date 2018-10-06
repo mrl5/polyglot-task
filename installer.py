@@ -79,3 +79,38 @@ def get_ruby_version():
     except FileNotFoundError:
         print("[Error]\t`{}` command not found. Make sure that ruby is installed and added to the PATH".format(cmd))
     return ruby_version
+
+
+def get_go_version():
+    """
+    :return: Go version
+    """
+    cmd = "go"
+    go_version = None
+    try:
+        rg = subprocess.run([cmd, "version"], stdout=subprocess.PIPE)
+        stdout = bytes.decode(rg.stdout).strip()
+        if re.match(r'''
+                    ^           # start of string
+                    go          # "go" string
+                    \s          # one whitespace
+                    version     # "version" string
+                    \s          # one whitespace
+                    ''', stdout, re.VERBOSE):
+            go_version = re.sub(r'''
+                                ^           # start of string
+                                go          # "go" string
+                                \s          # one whitespace
+                                version     # "version" string
+                                \s          # one whitespace
+                                go          # "go" string
+                                (           # start of grouping
+                                [0-9]       # a digit
+                                \.          # "." string
+                                [0-9]+      # one or more digits
+                                )           # end of grouping
+                                .*          # any character (except line break) zero or more times
+                                ''', "\\1", stdout, 0, re.VERBOSE)
+    except FileNotFoundError:
+        print("[Error]\t`{}` command not found. Make sure that go is installed and added to the PATH".format(cmd))
+    return go_version
