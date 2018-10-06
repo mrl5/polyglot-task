@@ -22,7 +22,7 @@ class Installer:
             "go": {"version": "1.10", "present": None}
         }
         self._api_source = "api.go"
-        self._work_files = ["worker.py", "endpoint.rb", os.path.splitext(self._api_source)[0]]
+        self._work_files = ["worker.py", "endpoint.rb", os.path.splitext(self._api_source)[0], "asdzxc.txt"]
 
     def _verify_python(self, sys_version_major):
         success_msg = "[OK]\tfound Python {}.{}.{}".format(
@@ -75,8 +75,15 @@ class Installer:
         """
         Sets execute permission for the owner and for a group
         """
-        octal_permission = 0o750 #rwxr-x---
-        os.chmod(path_to_file, octal_permission)
+        octal_permission = 0o750 # rwxr-x---
+        try:
+            os.chmod(path_to_file, octal_permission)
+            print("[OK]\t{}".format(path_to_file))
+            ret_code = 0
+        except OSError as oe:
+            print("[Error]\t{}: {}".format(oe.filename, oe.strerror))
+            ret_code = 1
+        return ret_code
 
     def install(self):
         """
@@ -100,9 +107,10 @@ class Installer:
 
         print("\nSetting execute permissions ...")
         os.chdir(this_file_dir)
-        sleep(0.5)
+        permissions_status = 0
         for f in self._work_files:
-            self._set_executable_permission(f)
+            sleep(0.5)
+            permissions_status = permissions_status | self._set_executable_permission(f)
 
 
 def get_ruby_version():
@@ -190,3 +198,6 @@ def query_yes_no(question):
             return valid[choice]
         else:
             print("Try again.")
+
+tst = Installer()
+tst.install()
