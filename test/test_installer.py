@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import pytest
+import shutil
+import os
 from installer import Installer
 
 __author__ = "mrl5"
@@ -76,3 +78,15 @@ def test_if_versions_are_stored(installer_instance):
     for k, v in installer_instance._dependencies.items():
         expected_dict_slice.update({k: v["present"]})
     assert test_dict == expected_dict_slice
+
+
+def test_build_api(tmpdir, installer_instance):
+    test_dir = tmpdir.mkdir("test_dir")
+    main_dir = os.path.dirname(os.getcwd())
+    binary_name = os.path.splitext(installer_instance._api_source)[0]
+    api_src = os.path.join(main_dir, installer_instance._api_source)
+    api_dest = os.path.join(str(test_dir), installer_instance._api_source)
+    shutil.copyfile(api_src, api_dest)
+    os.chdir(str(test_dir))
+    installer_instance._build_api(api_dest)
+    assert os.path.isfile(os.path.join(str(test_dir), binary_name))

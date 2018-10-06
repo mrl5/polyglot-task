@@ -3,6 +3,7 @@
 import sys
 import subprocess
 import re
+import os
 from time import sleep
 
 __author__ = "mrl5"
@@ -61,20 +62,21 @@ class Installer:
         g = self._verify_go(get_go_version())
         return p and r and g
 
-    def _build_api(self):
-        print("Compiling {} ...".format(self._api_source))
+    def _build_api(self, path_to_api_src):
+        print("Building {} ...".format(self._api_source))
 
     def install(self):
         """
         Creates environment for the polyglot-task
         """
+        this_file_dir = os.path.dirname(os.path.realpath(__file__))
         if self._verify_deps():
-            self._build_api()
+            self._build_api(this_file_dir)
         else:
             if self._dependencies["go"]["present"]:
                 build_anyways = query_yes_no(
                     "Do you want to compile sources using Go {}?".format(self._dependencies["go"]["present"]))
-                self._build_api() if build_anyways else False
+                self._build_api(this_file_dir) if build_anyways else False
             else:
                 sleep(2)
                 sys.exit("Could not call `go` from the console. Aborting.")
@@ -149,6 +151,10 @@ def get_go_version():
 
 
 def query_yes_no(question):
+    """
+    :param question: Question to be answered
+    :return: answer
+    """
     valid = {"yes": True, "y": True,
              "no": False, "n": False}
 
@@ -161,6 +167,3 @@ def query_yes_no(question):
             return valid[choice]
         else:
             print("Try again")
-
-instlr = Installer()
-instlr.install()
