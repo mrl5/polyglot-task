@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+from __future__ import print_function
 
 import sys
 import subprocess
@@ -218,6 +221,7 @@ def query_yes_no(question):
 
 def main(args):
     allowed_no_of_args = 0
+    sys.exit("Installer is written for Python 3. Aborting.") if sys.version_info.major < 3 else False
     sys.exit("Script doesn't accept any arguments.") if len(args) != allowed_no_of_args else False
     installer = Installer()
     installer.install()
