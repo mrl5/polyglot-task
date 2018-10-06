@@ -4,7 +4,6 @@ import sys
 import subprocess
 import re
 import os
-import stat
 from time import sleep
 
 __author__ = "mrl5"
@@ -216,5 +215,13 @@ def query_yes_no(question):
         else:
             print("Try again.")
 
-tst = Installer()
-tst.install()
+
+def main(args):
+    allowed_no_of_args = 0
+    sys.exit("Script doesn't accept any arguments.") if len(args) != allowed_no_of_args else False
+    installer = Installer()
+    installer.install()
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
