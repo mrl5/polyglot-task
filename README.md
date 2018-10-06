@@ -10,41 +10,47 @@
 ## Dependencies
 - Python3.4 (or higher)
     - `pytest` library (if you want to run tests)
-- Ruby 2.3 (or higher)
+- Ruby 2.3 or 2.4
 - go1.10
 
 ## Getting started
 0. Your OS:
     - if you are not running on a GNU/Linux OS, you are on your own with debugging
-1. Check for dependencies
+
+1. Get the application (clone or download)
+    - `git clone http://github.com/mrl5/polyglot-task.git`
+    - [download](https://github.com/mrl5/polyglot-task/archive/master.zip) and extract
+    - go to the application's directory `cd polyglot-task`
+
+2. run `python3 installer.py` (this script will reproduce steps 2, 3, 4)
+
+**OR**
+
+2. Check for dependencies
     - Python: `python --version`
     - Ruby: `ruby --version`
     - Go: `go version`
-2. Get the application (clone or download)
-    - `git clone http://github.com/mrl5/polyglot-task.git`
-    - [download](https://github.com/mrl5/polyglot-task/archive/master.zip) and extract
-3. Go to the application's directory
-    - `cd polyglot-task`
-4. Compile `api.go`
+
+3. Compile `api.go`
     - make sure that you are inside application's directory `pwd -P | xargs basename` (you should get `polyglot-task
 `)
     - `go build api.go`
-5. Make sure that `endpoint.rb`, `api` and `worker.py` are executable
+4. Make sure that `endpoint.rb`, `api` and `worker.py` are executable
     - if you are running on GNU/Linux run `chmod +x endpoint.rb api worker.py`
-6. Play around
+5. Play around
     - you can start the program by typing `./endpoint.rb` or `ruby endpoint.rb`
-7. Logfile will be stored in folder `polyglot-task-by-JK-aka-mrl5` in your user's home directory (e.g. `/home/kuba/polyglot-task-by-JK-aka-mrl5`)
+6. Logfiles will be stored in folder `polyglot-task-by-JK-aka-mrl5-v20` in your user's home directory (e.g. `/home/kuba/polyglot-task-by-JK-aka-mrl5`)
 
 ## Troubleshooting
 - `api.go` doesn't compile!
-    - download the binary version from [here] (memento section **5** from "Getting started")
+    - download the binary version from [here] (check `go_env.txt` file and check section **4** from "Getting started")
 - error: `sh: /home/kuba/test/polyglot-task/api: No such file or directory`
-    - there is no `api` binary file in project's directory: check sections **3** and **4** for the solution
+    - there is no `api` binary file in project's directory: check sections **2** and **3** for the solution
 - error: `sh: /home/kuba/test/polyglot-task/api: Permission denied`
-    - your user has no permission to run `api` file: check section **5** for a solution
+    - your user has no permission to run `api` file: check section **4** for a solution
     - if you can't change file permission you should clone or extract the project inside your user's home directory
 - "I provide valid RPN expression but I get `error` output"
-    - if your RPN expression is valid your user has no permission to run `worker.py` file: check section **5** for a solution
+    - if your RPN expression is valid your user has no permission to run `worker.py` file: check section **4** for a solution
     - if you can't change file permission you should clone or extract the project inside your user's home directory
     - if none of above works, try running `python worker.py "<your RPN_expression>"` (e.g. `python worker.py "1 1 +"`) python interpreter should give you more information about what went wrong
 
