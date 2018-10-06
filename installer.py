@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import subprocess
+import re
 
 __author__ = "mrl5"
 
@@ -44,3 +46,36 @@ class Installer:
         verification = self._dependencies["go"]["version"] == go_version
         print(success_msg) if verification else print(fail_msg)
         return verification
+
+
+def get_ruby_version():
+    """
+    :return: Ruby version
+    """
+    cmd = "ruby"
+    ruby_version = None
+    try:
+        rv = subprocess.run([cmd, "--version"], stdout=subprocess.PIPE)
+        stdout = bytes.decode(rv.stdout).strip()
+        if re.match(r'''
+                    ^       # start of string
+                    \b      # start of whole word
+                    ruby    # "ruby" string
+                    \b      # end of whole word
+                    ''', stdout, re.VERBOSE):
+            ruby_version = re.sub(r'''
+                                ^       # start of string
+                                \b      # start of whole word
+                                ruby    # "ruby" string
+                                \b      # end of whole word
+                                \s      # one whitespace
+                                (       # start of grouping
+                                [0-9]   # a digit
+                                \.      # "." string
+                                [0-9]   # a digit
+                                )       # end of grouping
+                                .*      # any character (except line break) zero or more times
+                                ''', "\\1", stdout, 0, re.VERBOSE)
+    except FileNotFoundError:
+        print("[Error]\t`{}` command not found. Make sure that ruby is installed and added to the PATH".format(cmd))
+    return ruby_version
