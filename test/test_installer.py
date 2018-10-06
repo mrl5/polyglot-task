@@ -58,3 +58,21 @@ def test_verify_go_success(installer_instance):
 def test_verify_go_fail(installer_instance):
     go_version = "1.9"
     assert installer_instance._verify_go(go_version) is False
+
+
+def test_if_versions_are_stored(installer_instance):
+    python_version_major = 2
+    ruby_version = "2.5"
+    go_version = "1.9"
+    installer_instance._verify_python(python_version_major)
+    installer_instance._verify_ruby(ruby_version)
+    installer_instance._verify_go(go_version)
+    test_dict = {
+        "python": python_version_major,
+        "ruby": ruby_version,
+        "go": go_version
+    }
+    expected_dict_slice = {}
+    for k, v in installer_instance._dependencies.items():
+        expected_dict_slice.update({k: v["present"]})
+    assert test_dict == expected_dict_slice
