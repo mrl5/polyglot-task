@@ -4,6 +4,7 @@ import sys
 import subprocess
 import re
 import os
+import stat
 from time import sleep
 
 __author__ = "mrl5"
@@ -63,18 +64,19 @@ class Installer:
         g = self._verify_go(get_go_version())
         return p and r and g
 
-    def _set_executable_permission(self, path_to_file):
-        """
-        Sets executable permissions to the file
-        """
-        pass
-
     def _build_api(self, path_to_api_src):
         os.chdir(os.path.dirname(path_to_api_src))
-        print("\nBuilding {} ...\n".format(self._api_source))
+        print("\nBuilding {} ...".format(self._api_source))
         build_cmd = ["go", "build", path_to_api_src]
         go_build = subprocess.run(build_cmd)
         return go_build.returncode
+
+    def _set_executable_permission(self, path_to_file):
+        """
+        Sets execute permission for the owner and for a group
+        """
+        octal_permission = 0o750 #rwxr-x---
+        os.chmod(path_to_file, octal_permission)
 
     def install(self):
         """
@@ -96,6 +98,11 @@ class Installer:
                 sys.exit("Could not call `go` from the console. Aborting.")
         print("Done.") if go_build_return_code == 0 else sys.exit("\nBuilding {} failed. Aborting.".format(self._api_source))
 
+        print("\nSetting execute permissions ...")
+        os.chdir(this_file_dir)
+        sleep(0.5)
+        for f in self._work_files:
+            self._set_executable_permission(f)
 
 
 def get_ruby_version():
