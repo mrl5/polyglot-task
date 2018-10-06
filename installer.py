@@ -19,6 +19,7 @@ class Installer:
             "ruby": {"version": ["2.3", "2.4"], "present": None},
             "go": {"version": "1.101", "present": None}
         }
+        self._api_source = "api.go"
 
     def _verify_python(self, sys_version_major):
         success_msg = "[OK]\tfound Python {}.{}.{}".format(
@@ -60,16 +61,20 @@ class Installer:
         g = self._verify_go(get_go_version())
         return p and r and g
 
+    def _build_api(self):
+        print("Compiling {} ...".format(self._api_source))
+
     def install(self):
         """
         Creates environment for the polyglot-task
         """
         if self._verify_deps():
-            pass
+            self._build_api()
         else:
             if self._dependencies["go"]["present"]:
-                query_yes_no(
+                build_anyways = query_yes_no(
                     "Do you want to compile sources using Go {}?".format(self._dependencies["go"]["present"]))
+                self._build_api() if build_anyways else False
             else:
                 sleep(2)
                 sys.exit("Could not call `go` from the console. Aborting.")
