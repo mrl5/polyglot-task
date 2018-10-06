@@ -33,3 +33,8 @@ def installer_instance():
 def test_verify_python_success(installer_instance):
     python_version_major = installer_instance._dependencies["python"]["version"]
     assert installer_instance._verify_python(python_version_major) is True
+
+
+def test_verify_python_fail(installer_instance):
+    python_version_major = 2
+    assert installer_instance._verify_python(python_version_major) is False
