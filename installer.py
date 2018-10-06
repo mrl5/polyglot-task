@@ -3,6 +3,7 @@
 import sys
 import subprocess
 import re
+from time import sleep
 
 __author__ = "mrl5"
 
@@ -46,6 +47,16 @@ class Installer:
         verification = self._dependencies["go"]["version"] == go_version
         print(success_msg) if verification else print(fail_msg)
         return verification
+
+    def _verify_deps(self):
+        print("Checking for dependencies ...")
+        sleep(1)
+        p = self._verify_python(sys.version_info.major)
+        sleep(1)
+        r = self._verify_ruby(get_ruby_version())
+        sleep(1)
+        g = self._verify_go(get_go_version())
+        return p and r and g
 
 
 def get_ruby_version():
@@ -114,3 +125,6 @@ def get_go_version():
     except FileNotFoundError:
         print("[Error]\t`{}` command not found. Make sure that go is installed and added to the PATH".format(cmd))
     return go_version
+
+instlr = Installer()
+instlr._verify_deps()
