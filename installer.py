@@ -36,4 +36,10 @@ class Installer:
         return verification
 
     def _verify_go(self, go_version):
-        pass
+        success_msg = "[OK]\tfound Go {}".format(go_version)
+        fail_msg = "[Error]\tfound Go {} ({} required).".format(
+            go_version, self._dependencies["go"]["version"])
+        self._dependencies["go"]["present"] = go_version
+        verification = self._dependencies["go"]["version"] == go_version
+        print(success_msg) if verification else print(fail_msg)
+        return verification
