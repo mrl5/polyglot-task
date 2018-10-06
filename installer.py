@@ -19,10 +19,10 @@ class Installer:
         self._dependencies = {
             "python": {"version": 3, "present": None},
             "ruby": {"version": ["2.3", "2.4"], "present": None},
-            "go": {"version": "1.10", "present": None}
+            "go": {"version": "1.10", "present": None, "status": False}
         }
         self._api_source = "api.go"
-        self._work_files = ["worker.py", "endpoint.rb", os.path.splitext(self._api_source)[0], "asdzxc.txt"]
+        self._work_files = ["worker.py", "endpoint.rb", os.path.splitext(self._api_source)[0]]
 
     def _verify_python(self, sys_version_major):
         success_msg = "[OK]\tfound Python {}.{}.{}".format(
@@ -52,6 +52,7 @@ class Installer:
         verification = self._dependencies["go"]["version"] == go_version
         if go_version:
             print(success_msg) if verification else print(fail_msg)
+        self._dependencies["go"]["status"] = verification
         return verification
 
     def _verify_deps(self):
@@ -85,21 +86,36 @@ class Installer:
             ret_code = 1
         return ret_code
 
+    def _quit_msg(self, deps_err, perms_err):
+        """
+        Prints quit message
+        :param deps_err: dependencies error (True/False)
+        :param perms_err: permissions error (True/False)
+        """
+        if not(deps_err | perms_err):
+            sleep(0.5)
+            print("\nSuccess. Application is ready to use.")
+        else:
+            sleep(0.5)
+            sys.stderr.write("\nNot all dependencies were met. Application might not work properly") if deps_err else False
+            sys.stderr.write("\nNot all files have execute permissions.") if perms_err else False
+            sys.exit(1)
+
     def install(self):
         """
         Creates environment for the polyglot-task
         """
         this_file_dir = os.path.dirname(os.path.realpath(__file__))
         path_to_api_src = os.path.join(this_file_dir, self._api_source)
-        if self._verify_deps():
+        deps_err = not self._verify_deps()
+        if self._dependencies["go"]["status"]:
             sleep(0.5)
             go_build_return_code = self._build_api(path_to_api_src)
         else:
             if self._dependencies["go"]["present"]:
                 build_anyways = query_yes_no(
                     "Do you want to compile sources using Go {}?".format(self._dependencies["go"]["present"]))
-                sleep(0.5)
-                go_build_return_code = self._build_api(path_to_api_src) if build_anyways else False
+                go_build_return_code = self._build_api(path_to_api_src) if build_anyways else sys.exit("Aborting.")
             else:
                 sleep(2)
                 sys.exit("Could not call `go` from the console. Aborting.")
@@ -107,10 +123,11 @@ class Installer:
 
         print("\nSetting execute permissions ...")
         os.chdir(this_file_dir)
-        permissions_status = 0
+        perms_err = 0
         for f in self._work_files:
             sleep(0.5)
-            permissions_status = permissions_status | self._set_executable_permission(f)
+            perms_err = perms_err | self._set_executable_permission(f)
+        self._quit_msg(deps_err, bool(perms_err))
 
 
 def get_ruby_version():
