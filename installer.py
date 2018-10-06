@@ -18,4 +18,10 @@ class Installer:
         }
 
     def _verify_python(self, sys_version_major):
-        pass
+        success_msg = "[OK]\tfound Python {}.{}.{}".format(
+            sys.version_info.major, sys.version_info.minor, sys.version_info.micro)
+        fail_msg = "[Error]\tfound Python {}.{}.{}. Run this script using 'python3' command.".format(
+            sys.version_info.major, sys.version_info.minor, sys.version_info.micro)
+        verification = self._dependencies["python"]["version"] == sys_version_major
+        print(success_msg) if verification else print(fail_msg)
+        return verification
