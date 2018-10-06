@@ -27,4 +27,10 @@ class Installer:
         return verification
 
     def _verify_ruby(self, ruby_version):
-        pass
+        success_msg = "[OK]\tfound Ruby {}".format(ruby_version)
+        fail_msg = "[Error]\tfound Ruby {}. Make sure that `ruby` command leads to the {} version".format(
+            ruby_version, " or ".join(self._dependencies["ruby"]["version"]))
+        self._dependencies["ruby"]["present"] = ruby_version
+        verification = ruby_version in self._dependencies["ruby"]["version"]
+        print(success_msg) if verification else print(fail_msg)
+        return verification
