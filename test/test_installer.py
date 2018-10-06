@@ -53,3 +53,8 @@ def test_verify_ruby_fail(installer_instance):
 def test_verify_go_success(installer_instance):
     go_version = installer_instance._dependencies["go"]["version"]
     assert installer_instance._verify_go(go_version) is True
+
+
+def test_verify_go_fail(installer_instance):
+    go_version = "1.9"
+    assert installer_instance._verify_go(go_version) is False
