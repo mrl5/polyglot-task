@@ -36,7 +36,8 @@ class Installer:
             ruby_version, " or ".join(self._dependencies["ruby"]["version"]))
         self._dependencies["ruby"]["present"] = ruby_version
         verification = ruby_version in self._dependencies["ruby"]["version"]
-        print(success_msg) if verification else print(fail_msg)
+        if ruby_version:
+            print(success_msg) if verification else print(fail_msg)
         return verification
 
     def _verify_go(self, go_version):
@@ -45,7 +46,8 @@ class Installer:
             go_version, self._dependencies["go"]["version"])
         self._dependencies["go"]["present"] = go_version
         verification = self._dependencies["go"]["version"] == go_version
-        print(success_msg) if verification else print(fail_msg)
+        if go_version:
+            print(success_msg) if verification else print(fail_msg)
         return verification
 
     def _verify_deps(self):
@@ -57,6 +59,20 @@ class Installer:
         sleep(1)
         g = self._verify_go(get_go_version())
         return p and r and g
+
+    def install(self):
+        """
+        Creates environment for the polyglot-task
+        """
+        if self._verify_deps():
+            pass
+        else:
+            if self._dependencies["go"]["present"]:
+                print(
+                    "Do you want to compile sources using Go {}? [yes/no]".format(self._dependencies["go"]["present"]))
+            else:
+                sleep(2)
+                sys.exit("Could not call `go` from the console. Aborting.")
 
 
 def get_ruby_version():
@@ -127,4 +143,4 @@ def get_go_version():
     return go_version
 
 instlr = Installer()
-instlr._verify_deps()
+instlr.install()
