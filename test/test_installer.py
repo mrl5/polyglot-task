@@ -43,3 +43,8 @@ def test_verify_python_fail(installer_instance):
 def test_verify_ruby_success(installer_instance):
     ruby_version = installer_instance._dependencies["ruby"]["version"][0]
     assert installer_instance._verify_ruby(ruby_version) is True
+
+
+def test_verify_ruby_fail(installer_instance):
+    ruby_version = "2.5"
+    assert installer_instance._verify_ruby(ruby_version) is False
