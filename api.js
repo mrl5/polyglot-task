@@ -48,7 +48,9 @@ function getTotalTime() {
 
 if (process.argv.length > 2) {
     let expressions = process.argv.slice(2);
+    //logRequest(uuid);
     expressions.forEach((expression, index) => {
+        //logInput(expression);
         callWorker(expression, index, expressions.length);
     });
 } else {
