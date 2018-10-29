@@ -2,6 +2,14 @@
 var startTime = new Date();
 var spawn = require('child_process').spawn;
 var result = new Map();
+var api = require('commander');
+
+//flags
+api
+  .version('1.0.0-SNAPSHOT')
+  .option('-u, --uuid', "Universally Unique IDentifier of the endpoint request")
+  .description("API for getting requests, sending to the worker and logging (requests, inputs, errors)")
+  .parse(process.argv);
 
 function callWorker(argument, id, noOfArgs) {
     let processStart = new Date();
@@ -47,12 +55,11 @@ function getTotalTime() {
 }
 
 function main() {
-    if (process.argv.length > 2) {
-        let expressions = process.argv.slice(2);
+    if (api.args.length > 0) {
         //logRequest(uuid);
-        expressions.forEach((expression, index) => {
+        api.args.forEach((expression, index) => {
             //logInput(expression);
-            callWorker(expression, index, expressions.length);
+            callWorker(expression, index, api.args.length);
         });
     } else {
         console.error("API error: expected at least one argument");
