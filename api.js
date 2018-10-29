@@ -46,14 +46,18 @@ function getTotalTime() {
     console.log(`total time: ${totalTime / 1000}`);
 }
 
-if (process.argv.length > 2) {
-    let expressions = process.argv.slice(2);
-    //logRequest(uuid);
-    expressions.forEach((expression, index) => {
-        //logInput(expression);
-        callWorker(expression, index, expressions.length);
-    });
-} else {
-    console.error("API error: expected at least one argument");
-    process.exit(1);
+function main() {
+    if (process.argv.length > 2) {
+        let expressions = process.argv.slice(2);
+        //logRequest(uuid);
+        expressions.forEach((expression, index) => {
+            //logInput(expression);
+            callWorker(expression, index, expressions.length);
+        });
+    } else {
+        console.error("API error: expected at least one argument");
+        process.exit(1);
+    }
 }
+
+main();
