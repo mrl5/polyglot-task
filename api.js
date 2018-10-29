@@ -4,7 +4,7 @@ var spawn = require('child_process').spawn;
 var result = new Map();
 var api = require('commander');
 
-//flags
+/* flags */
 api
   .version('1.0.0-SNAPSHOT')
   .option('-u, --uuid', "Universally Unique IDentifier of the endpoint request")
@@ -22,9 +22,10 @@ function callWorker(argument, id, noOfArgs) {
     worker.stderr.on('data', (data) => {
         elapsedTime = new Date() - processStart;
         result.set(id, ["error", elapsedTime / 1000]);
+        //logError();
     });
     worker.on('close', (code) => {
-        //add exit code
+        /* add exit code */
         let tmpArray = result.get(id);
         tmpArray.push(code);
         result.set(id, tmpArray);
@@ -40,7 +41,7 @@ function printOutput() {
     let item;
     for (let i = 0; i < result.size; i++) {
         item = result.get(i);
-        //STDOUT if exit code was 0
+        /* STDOUT if exit code was 0 */
         if (item[2] === 0) {
             console.log(`${item[0]}, ${item[1]}`);
         } else {
