@@ -7,7 +7,7 @@ var api = require('commander');
 /* flags */
 api
   .version('1.0.0-SNAPSHOT')
-  .option('-u, --uuid', "Universally Unique IDentifier of the endpoint request")
+  .option('-u, --uuid [type]', "Universally Unique IDentifier of the endpoint request")
   .description("API for getting requests, sending to the worker and logging (requests, inputs, errors)")
   .parse(process.argv);
 
