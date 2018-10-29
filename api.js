@@ -16,12 +16,10 @@ function callWorker(argument, id, noOfArgs) {
     let workerCmd = "./worker.py";
     let worker = spawn(workerCmd, [argument]);
     worker.stdout.on('data', (data) => {
-        elapsedTime = new Date() - processStart;
-        result.set(id, [data.toString().trim(), elapsedTime / 1000]);
+        result.set(id, [data.toString().trim(), getDuration(processStart) / 1000]);
     });
     worker.stderr.on('data', (data) => {
-        elapsedTime = new Date() - processStart;
-        result.set(id, ["error", elapsedTime / 1000]);
+        result.set(id, ["error", getDuration(processStart) / 1000]);
         //logError();
     });
     worker.on('close', (code) => {
@@ -31,16 +29,16 @@ function callWorker(argument, id, noOfArgs) {
         result.set(id, tmpArray);
 
         if (id + 1 === noOfArgs) {
-            printOutput();
-            getTotalTime();
+            printOutput(result);
+            console.log(`total time: ${getDuration(startTime) / 1000}`);
         }
     });
 }
 
-function printOutput() {
+function printOutput(resultArray) {
     let item;
-    for (let i = 0; i < result.size; i++) {
-        item = result.get(i);
+    for (let i = 0; i < resultArray.size; i++) {
+        item = resultArray.get(i);
         /* STDOUT if exit code was 0 */
         if (item[2] === 0) {
             console.log(`${item[0]}, ${item[1]}`);
@@ -50,9 +48,9 @@ function printOutput() {
     }
 }
 
-function getTotalTime() {
-    let totalTime = new Date() - startTime;
-    console.log(`total time: ${totalTime / 1000}`);
+function getDuration(startTime) {
+    let duration = new Date() - startTime;
+    return duration;
 }
 
 function main() {
