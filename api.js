@@ -13,16 +13,16 @@ api
 
 function callWorker(argument, id, noOfArgs) {
     let processStart = new Date();
-    let totalTime;
+    let elapsedTime;
     let workerCmd = "./worker.py";
     let worker = spawn(workerCmd, [argument]);
     worker.stdout.on('data', (data) => {
-        result.set(id, [data.toString().trim(), getDuration(processStart) / 1000]);
-        //logInput(expression);
+        elapsedTime = getDuration(processStart) / 1000;
+        result.set(id, [data.toString().trim(), elapsedTime]);
     });
     worker.stderr.on('data', (data) => {
-        result.set(id, ["error", getDuration(processStart) / 1000]);
-        //logInput(expression);
+        elapsedTime = getDuration(processStart) / 1000;
+        result.set(id, ["error", elapsedTime]);
         //logError();
     });
     worker.on('close', (code) => {
@@ -30,10 +30,11 @@ function callWorker(argument, id, noOfArgs) {
         let tmpArray = result.get(id);
         tmpArray.push(code);
         result.set(id, tmpArray);
+        logInput(api.uuid, argument, elapsedTime);
 
         if (id + 1 === noOfArgs) {
             printOutput(result);
-            totalTime = getDuration(startTime) / 1000;
+            const totalTime = getDuration(startTime) / 1000;
             logRequest(api.uuid, totalTime, noOfArgs);
         }
     });
@@ -59,6 +60,10 @@ function getDuration(startTime) {
 
 function logRequest(uuid, elapsedTime, noOfExpressions) {
     console.log(`[${new Date().toISOString()}]\t${uuid}\t${elapsedTime}\t${noOfExpressions}`);
+}
+
+function logInput(uuid, input, elapsedTime) {
+    console.log(`${uuid}\t${elapsedTime}\t${input}`)
 }
 
 function main() {
