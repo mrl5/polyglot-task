@@ -2,24 +2,27 @@
 var startTime = new Date();
 var spawn = require('child_process').spawn;
 var result = new Map();
-var api = require('commander');
 
 /* flags */
+var api = require('commander');
 api
   .version('1.0.0-SNAPSHOT')
-  .option('-u, --uuid [type]', "Universally Unique IDentifier of the endpoint request")
+  .option('-u, --uuid [type]', "Universally Unique IDentifier of the endpoint request", 'internal')
   .description("API for getting requests, sending to the worker and logging (requests, inputs, errors)")
   .parse(process.argv);
 
 function callWorker(argument, id, noOfArgs) {
     let processStart = new Date();
+    let totalTime;
     let workerCmd = "./worker.py";
     let worker = spawn(workerCmd, [argument]);
     worker.stdout.on('data', (data) => {
         result.set(id, [data.toString().trim(), getDuration(processStart) / 1000]);
+        //logInput(expression);
     });
     worker.stderr.on('data', (data) => {
         result.set(id, ["error", getDuration(processStart) / 1000]);
+        //logInput(expression);
         //logError();
     });
     worker.on('close', (code) => {
@@ -30,7 +33,8 @@ function callWorker(argument, id, noOfArgs) {
 
         if (id + 1 === noOfArgs) {
             printOutput(result);
-            console.log(`total time: ${getDuration(startTime) / 1000}`);
+            totalTime = getDuration(startTime) / 1000;
+            logRequest(api.uuid, totalTime, noOfArgs);
         }
     });
 }
@@ -53,11 +57,13 @@ function getDuration(startTime) {
     return duration;
 }
 
+function logRequest(uuid, elapsedTime, noOfExpressions) {
+    console.log(`[${new Date().toISOString()}]\t${uuid}\t${elapsedTime}\t${noOfExpressions}`);
+}
+
 function main() {
     if (api.args.length > 0) {
-        //logRequest(uuid);
         api.args.forEach((expression, index) => {
-            //logInput(expression);
             callWorker(expression, index, api.args.length);
         });
     } else {
