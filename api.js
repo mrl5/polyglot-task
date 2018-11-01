@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 var startTime = new Date();
-var spawn = require('child_process').spawn;
+const spawn = require('child_process').spawn;
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 var result = new Map();
+const logsDir = path.join(os.homedir(), "polyglot-task-by-JK-aka-mrl5-v30");
+const inputLogFile = path.join(logsDir, "input.log");
+const requestsLogFile = path.join(logsDir, "requests.log");
 
 /* flags */
 var api = require('commander');
@@ -10,6 +16,17 @@ api
   .option('-u, --uuid [type]', "Universally Unique IDentifier of the endpoint request", 'internal')
   .description("API for getting requests, sending to the worker and logging (requests, inputs, errors)")
   .parse(process.argv);
+
+/* create logs dir if it doesn't exist */
+if (!fs.existsSync(logsDir)) {
+    /* async mkdir */
+    fs.mkdir(logsDir, (err) => {
+        if (err) {
+            console.error(err);
+            process.exit(1);
+        }
+    });
+}
 
 function callWorker(argument, id, noOfArgs) {
     let processStart = new Date();
@@ -23,7 +40,6 @@ function callWorker(argument, id, noOfArgs) {
     worker.stderr.on('data', (data) => {
         elapsedTime = getDuration(processStart) / 1000;
         result.set(id, ["error", elapsedTime]);
-        //logError();
     });
     worker.on('close', (code) => {
         /* add exit code */
@@ -59,11 +75,13 @@ function getDuration(startTime) {
 }
 
 function logRequest(uuid, elapsedTime, noOfExpressions) {
-    console.log(`[${new Date().toISOString()}]\t${uuid}\t${elapsedTime}\t${noOfExpressions}`);
+    let logReg = `[${new Date().toISOString()}]\t${uuid}\t${elapsedTime}\t${noOfExpressions}\n`;
+    fs.appendFile(requestsLogFile, logReg, (err) => {});
 }
 
 function logInput(uuid, input, elapsedTime) {
-    console.log(`${uuid}\t${elapsedTime}\t${input}`)
+    let logReg = `${uuid}\t${elapsedTime}\t${input}\n`;
+    fs.appendFile(inputLogFile, logReg, (err) => {});
 }
 
 function main() {
