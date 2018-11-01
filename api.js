@@ -8,6 +8,7 @@ var result = new Map();
 const logsDir = path.join(os.homedir(), "polyglot-task-by-JK-aka-mrl5-v30");
 const inputLogFile = path.join(logsDir, "input.log");
 const requestsLogFile = path.join(logsDir, "requests.log");
+const workerCmd = path.join(__dirname, "worker.py");
 
 /* flags */
 var api = require('commander');
@@ -28,10 +29,9 @@ if (!fs.existsSync(logsDir)) {
     });
 }
 
-function callWorker(argument, id, noOfArgs) {
+function callWorker(workerCmd, argument, id, noOfArgs) {
     let processStart = new Date();
     let elapsedTime;
-    let workerCmd = "./worker.py";
     let worker = spawn(workerCmd, [argument]);
     worker.stdout.on('data', (data) => {
         elapsedTime = getDuration(processStart) / 1000;
@@ -87,7 +87,7 @@ function logInput(uuid, input, elapsedTime) {
 function main() {
     if (api.args.length > 0) {
         api.args.forEach((expression, index) => {
-            callWorker(expression, index, api.args.length);
+            callWorker(workerCmd, expression, index, api.args.length);
         });
     } else {
         console.error("API error: expected at least one argument");
